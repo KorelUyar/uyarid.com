@@ -34,3 +34,8 @@ scroll position, and each app as a stop with its window floating in front of a p
 node scripts/build-data.mjs > data.json   # refresh the snapshot
 python3 -m http.server 4180               # preview at http://localhost:4180
 ```
+
+Two optional helpers need [Playwright](https://playwright.dev) (not a dependency of the site):
+`scripts/shots.cjs` takes screenshots of the whole page (desktop, `--mobile`, `--webkit`,
+`--reduce`, or `--url https://uyarid.com/` for the live page), and `scripts/og.cjs` renders the
+picture for link previews (`assets/og.jpg`).
