@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#08090b">
+  <meta name="color-scheme" content="dark">
+  <title>uyarid · apps and open source by Korel Uyar</title>
+  <meta name="description" content="Small, fast desktop apps by Korel Uyar. Free to download, open source.">
+  <meta property="og:title" content="uyarid · apps and open source">
+  <meta property="og:description" content="Small, fast desktop apps by Korel Uyar. Free to download, open source.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'> <rect width='32' height='32' rx='7' fill='%2308090b'/> <g fill='none' stroke='%2338bdf8' stroke-width='4'> <path d='M6 4V8.343A4 4 0 0 0 7.172 11.172L10.828 14.828A4 4 0 0 0 13.657 16H24'/> <path d='M24 4V17.343A4 4 0 0 1 22.828 20.172L16 27'/> </g> <circle cx='24' cy='16' r='3' fill='%2308090b' stroke='%23e6e8eb' stroke-width='2'/> </svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="./" aria-label="uyarid">
+      <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+        <rect width="32" height="32" rx="7" fill="#0f1216"/>
+        <g fill="none" stroke="#38bdf8" stroke-width="4">
+          <path d="M6 4V8.343A4 4 0 0 0 7.172 11.172L10.828 14.828A4 4 0 0 0 13.657 16H24"/>
+          <path d="M24 4V17.343A4 4 0 0 1 22.828 20.172L16 27"/>
+        </g>
+        <circle cx="24" cy="16" r="3" fill="#0f1216" stroke="#e6e8eb" stroke-width="2"/>
+      </svg>
+      <span>uyarid</span>
+    </a>
+    <a class="top-link" id="github-link" href="https://github.com/KorelUyar" rel="noopener">
+      GitHub
+      <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
+    </a>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Apps and open source<br><span>by Korel Uyar.</span></h1>
+      <p>Small tools I build for myself and put online. Free to download, no account, source included.</p>
+    </section>
+
+    <section aria-labelledby="apps-title">
+      <h2 class="label" id="apps-title">Apps</h2>
+      <div class="apps" id="apps">
+        <div class="app skeleton" aria-hidden="true"></div>
+        <div class="app skeleton" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="repos-title">
+      <h2 class="label" id="repos-title">Repositories <span id="repo-count"></span></h2>
+      <div class="repos" id="repos"></div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© <span id="year">2026</span> Korel Uyar</span>
+    <span id="updated"></span>
+  </footer>
+
+  <noscript><p class="noscript">This page lists my apps and repositories with JavaScript. Without it, see <a href="https://github.com/KorelUyar">github.com/KorelUyar</a>.</p></noscript>
+  <script src="app.js" defer></script>
+</body>
+</html>

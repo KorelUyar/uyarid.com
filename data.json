@@ -1,0 +1,53 @@
+{
+  "generated": "2026-11-10T18:13:10.077Z",
+  "repos": [
+    {
+      "name": "roomy",
+      "description": "See what is on your disk and delete what you don't need. A clean, fast disk space app for macOS and Windows.",
+      "language": null,
+      "stars": 0,
+      "pushed_at": "2026-11-10T18:06:43Z",
+      "html_url": "https://github.com/KorelUyar/roomy",
+      "fork": false,
+      "archived": false,
+      "release": null
+    },
+    {
+      "name": "tailbolt",
+      "description": "AirDrop for your whole tailnet — send files of any size to any Tailscale device, including other people's. Native macOS menu-bar app.",
+      "language": "Swift",
+      "stars": 0,
+      "pushed_at": "2026-10-29T13:31:41Z",
+      "html_url": "https://github.com/KorelUyar/tailbolt",
+      "fork": false,
+      "archived": false,
+      "release": {
+        "tag": "v2.3.0",
+        "published_at": "2026-10-29T13:31:41Z",
+        "assets": [
+          {
+            "name": "Install.Tailbolt.command",
+            "size": 1483,
+            "url": "https://github.com/KorelUyar/tailbolt/releases/download/v2.3.0/Install.Tailbolt.command"
+          },
+          {
+            "name": "Tailbolt.zip",
+            "size": 5375496,
+            "url": "https://github.com/KorelUyar/tailbolt/releases/download/v2.3.0/Tailbolt.zip"
+          }
+        ]
+      }
+    },
+    {
+      "name": "killer-sudoku",
+      "description": "Premium Killer Sudoku web app · Skills Battle 2026 · Next.js 15 · Prisma · MySQL",
+      "language": "TypeScript",
+      "stars": 1,
+      "pushed_at": "2026-08-17T19:15:23Z",
+      "html_url": "https://github.com/KorelUyar/killer-sudoku",
+      "fork": false,
+      "archived": false,
+      "release": null
+    }
+  ]
+}

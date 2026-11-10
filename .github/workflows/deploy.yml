@@ -1,0 +1,47 @@
+name: Deploy
+
+# Publishes the site to GitHub Pages. Runs on every push and a few times a
+# day, so new repositories and releases show up without anyone touching it.
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "23 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fresh list of repositories and releases
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          if node scripts/build-data.mjs > data.new; then mv data.new data.json; else echo "GitHub API failed, keeping the committed snapshot"; rm -f data.new; fi
+      - name: Assemble
+        run: |
+          mkdir _site
+          cp -r index.html style.css app.js data.json assets _site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4
