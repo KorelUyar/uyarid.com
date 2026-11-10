@@ -5,6 +5,12 @@ The public front page of [uyarid.com](https://uyarid.com): every public reposito
 
 Plain HTML, CSS and JavaScript. No build step, no dependencies.
 
+**How it gets online:** a push to `main` publishes the page with GitHub Pages
+(`.github/workflows/deploy.yml`, also every six hours for fresh data). The home server's gateway
+(nginx, `~/monitoring/gateway/default.conf` on korels-server) serves `uyarid.com` from that Pages
+site and keeps copies for ten minutes, so a change is live on uyarid.com about ten minutes after
+the push. Nothing has to be deployed on the server.
+
 - `index.html`, `style.css`, `app.js` — the page.
 - `data.json` — snapshot of repositories and latest releases, written by `scripts/build-data.mjs`.
   The page renders from it right away, then refreshes itself from the public GitHub API.
