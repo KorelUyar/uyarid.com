@@ -6,6 +6,11 @@
 
 const USER = "KorelUyar";
 
+// Cloudflare keeps pictures for hours under their address. Raise this number
+// whenever a file in assets/ is replaced, so visitors get the new one.
+const ASSETS = "2";
+const asset = (path) => `${path}?v=${ASSETS}`;
+
 // Presentation for known apps. A repository that is not listed here still
 // gets a card as soon as it has a release with downloadable files.
 const APPS = {
@@ -127,13 +132,13 @@ function appCard(repo, os) {
   const version = repo.release ? esc(repo.release.tag.replace(/^v/, "")) : "";
   const url = esc(safeUrl(repo.html_url));
   const stage = cfg?.shot
-    ? `<a class="stage ${cfg.shotShape === "window" ? "window" : "shot"}" href="${url}" rel="noopener" tabindex="-1" aria-hidden="true"><img src="${esc(cfg.shot)}" alt="" loading="lazy" decoding="async"></a>`
+    ? `<a class="stage ${cfg.shotShape === "window" ? "window" : "shot"}" href="${url}" rel="noopener" tabindex="-1" aria-hidden="true"><img src="${esc(asset(cfg.shot))}" alt="" loading="lazy" decoding="async"></a>`
     : "";
   return `<article class="app spot${stage ? "" : " plain"}" id="app-${esc(repo.name)}" data-reveal>
     ${stage}
     <div class="app-info">
       <div class="app-title">
-        ${cfg?.icon ? `<img class="app-icon" src="${esc(cfg.icon)}" width="60" height="60" alt="">` : `<span class="app-icon letter">${esc(name[0].toUpperCase())}</span>`}
+        ${cfg?.icon ? `<img class="app-icon" src="${esc(asset(cfg.icon))}" width="60" height="60" alt="">` : `<span class="app-icon letter">${esc(name[0].toUpperCase())}</span>`}
         <h3>${esc(name)}${version ? `<span class="chip">${version}</span>` : ""}</h3>
       </div>
       <p class="app-tagline">${esc(cfg?.tagline ?? repo.description ?? "")}</p>
