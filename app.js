@@ -12,9 +12,10 @@ const APPS = {
   roomy: {
     name: "Roomy",
     tagline: "See what is on your disk. Delete what you don't need.",
+    points: ["Scans a whole disk in seconds", "Apps, large files, folders and cleanup in one place", "Everything goes to the Trash first"],
     icon: "assets/roomy.png",
     shot: "assets/roomy-shot.png",
-    shotFit: "cover",
+    shotShape: "window",
     note: "macOS 12+ · Windows 10 and 11",
     downloads: [
       { os: "mac", label: "macOS", match: /\.dmg$/i },
@@ -24,9 +25,10 @@ const APPS = {
   tailbolt: {
     name: "Tailbolt",
     tagline: "AirDrop for your whole tailnet. Any size, any device.",
+    points: ["Files and folders of any size", "To your own devices and other people's", "Fast path when both are on the same network"],
     icon: "assets/tailbolt.png",
     shot: "assets/tailbolt-shot.png",
-    shotFit: "contain",
+    shotShape: "shot",
     note: "macOS 14+ · needs Tailscale",
     downloads: [{ os: "mac", label: "macOS", match: /\.zip$/i }],
   },
@@ -47,14 +49,18 @@ const LANG_COLOR = {
   Luau: "#00a2ff",
 };
 
-const OS_ICON = {
-  mac: '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31-1.02-1.5-2.62-1.7-3.19-1.73-1.36-.14-2.65.8-3.34.8-.69 0-1.75-.78-2.88-.76-1.48.02-2.85.86-3.61 2.19-1.54 2.67-.39 6.62 1.11 8.79.73 1.06 1.6 2.25 2.75 2.21 1.1-.04 1.52-.71 2.85-.71 1.33 0 1.71.71 2.88.69 1.19-.02 1.94-1.08 2.67-2.15.84-1.23 1.19-2.42 1.21-2.48-.03-.01-2.31-.89-2.33-3.54ZM14.2 6.15c.61-.74 1.02-1.76.91-2.78-.88.04-1.94.59-2.57 1.32-.56.65-1.06 1.7-.93 2.7.98.08 1.98-.5 2.59-1.24Z"/></svg>',
-  win: '<svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" aria-hidden="true"><path d="M3 5.1 10.5 4v7.5H3V5.1Zm8.5-1.25L21 2.5v9h-9.5V3.85ZM3 12.5h7.5V20L3 18.9v-6.4Zm8.5 0H21v9l-9.5-1.35V12.5Z"/></svg>',
-  file: '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>',
+const ICON = {
+  mac: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31-1.02-1.5-2.62-1.7-3.19-1.73-1.36-.14-2.65.8-3.34.8-.69 0-1.75-.78-2.88-.76-1.48.02-2.85.86-3.61 2.19-1.54 2.67-.39 6.62 1.11 8.79.73 1.06 1.6 2.25 2.75 2.21 1.1-.04 1.52-.71 2.85-.71 1.33 0 1.71.71 2.88.69 1.19-.02 1.94-1.08 2.67-2.15.84-1.23 1.19-2.42 1.21-2.48-.03-.01-2.31-.89-2.33-3.54ZM14.2 6.15c.61-.74 1.02-1.76.91-2.78-.88.04-1.94.59-2.57 1.32-.56.65-1.06 1.7-.93 2.7.98.08 1.98-.5 2.59-1.24Z"/></svg>',
+  win: '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M3 5.1 10.5 4v7.5H3V5.1Zm8.5-1.25L21 2.5v9h-9.5V3.85ZM3 12.5h7.5V20L3 18.9v-6.4Zm8.5 0H21v9l-9.5-1.35V12.5Z"/></svg>',
+  file: '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>',
+  out: '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>',
 };
 
 const esc = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+
+/** Links only ever go to https pages. Anything else becomes "#". */
+const safeUrl = (u) => (/^https:\/\//i.test(String(u ?? "")) ? String(u) : "#");
 
 function visitorOS() {
   const p = (navigator.userAgentData?.platform || navigator.platform || "").toLowerCase();
@@ -113,43 +119,104 @@ function appCard(repo, os) {
     .map((d, i) => {
       // Highlight the visitor's system; on other devices the first one.
       const primary = matches ? d.os === os : i === 0;
-      return `<a class="btn${primary ? " primary" : ""}" href="${esc(d.asset.url)}" rel="noopener">
-        ${OS_ICON[d.os] ?? OS_ICON.file}<span>${primary ? "Download for " : ""}${esc(d.label)}</span>
+      return `<a class="btn${primary ? " primary" : ""}" href="${esc(safeUrl(d.asset.url))}" rel="noopener">
+        ${ICON[d.os] ?? ICON.file}<span>${primary ? "Download for " : ""}${esc(d.label)}</span>
         <small>${esc(size(d.asset.size))}</small></a>`;
     })
     .join("");
   const version = repo.release ? esc(repo.release.tag.replace(/^v/, "")) : "";
-  return `<article class="app">
-    ${cfg?.shot ? `<a class="shot ${cfg.shotFit ?? "cover"}" href="${esc(repo.html_url)}" rel="noopener" tabindex="-1" aria-hidden="true"><img src="${esc(cfg.shot)}" alt="" loading="lazy"></a>` : ""}
-    <div class="app-body">
-      <div class="app-head">
-        ${cfg?.icon ? `<img class="app-icon" src="${esc(cfg.icon)}" width="52" height="52" alt="">` : `<span class="app-icon letter">${esc(name[0].toUpperCase())}</span>`}
-        <div>
-          <h3>${esc(name)} ${version ? `<span class="version">${version}</span>` : ""}</h3>
-          <p>${esc(cfg?.tagline ?? repo.description ?? "")}</p>
-        </div>
+  const url = esc(safeUrl(repo.html_url));
+  const stage = cfg?.shot
+    ? `<a class="stage ${cfg.shotShape === "window" ? "window" : "shot"}" href="${url}" rel="noopener" tabindex="-1" aria-hidden="true"><img src="${esc(cfg.shot)}" alt="" loading="lazy" decoding="async"></a>`
+    : "";
+  return `<article class="app spot${stage ? "" : " plain"}" id="app-${esc(repo.name)}" data-reveal>
+    ${stage}
+    <div class="app-info">
+      <div class="app-title">
+        ${cfg?.icon ? `<img class="app-icon" src="${esc(cfg.icon)}" width="60" height="60" alt="">` : `<span class="app-icon letter">${esc(name[0].toUpperCase())}</span>`}
+        <h3>${esc(name)}${version ? `<span class="chip">${version}</span>` : ""}</h3>
       </div>
-      <div class="buttons">${buttons || `<span class="soon">First release is on its way</span>`}</div>
+      <p class="app-tagline">${esc(cfg?.tagline ?? repo.description ?? "")}</p>
+      ${cfg?.points ? `<ul class="app-points">${cfg.points.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>` : ""}
+      <div class="app-actions">${buttons || `<span class="soon">First release is on its way</span>`}</div>
       <div class="app-meta">
-        ${cfg?.note ? `<span>${esc(cfg.note)}</span>` : ""}
-        ${repo.release ? `<span>Released ${esc(date(repo.release.published_at))}</span>` : ""}
-        <a href="${esc(repo.html_url)}" rel="noopener">Source</a>
+        <span class="app-facts">
+          ${cfg?.note ? `<span>${esc(cfg.note)}</span>` : ""}
+          ${repo.release ? `<span>Released ${esc(date(repo.release.published_at))}</span>` : ""}
+        </span>
+        <a href="${url}" rel="noopener">Source ${ICON.out}</a>
       </div>
     </div>
   </article>`;
 }
 
-function repoRow(repo) {
-  const isApp = !!repo.release || !!APPS[repo.name];
-  return `<a class="repo" href="${esc(repo.html_url)}" rel="noopener">
-    <span class="repo-name">${esc(repo.name)}${isApp && repo.release ? `<em>${esc(repo.release.tag)}</em>` : ""}</span>
+function repoCard(repo) {
+  return `<a class="repo spot" href="${esc(safeUrl(repo.html_url))}" rel="noopener" data-reveal>
+    <span class="repo-top">
+      <span class="repo-name">${esc(repo.name)}</span>
+      ${repo.release ? `<span class="chip">${esc(repo.release.tag)}</span>` : ""}
+      <span class="repo-arrow">${ICON.out}</span>
+    </span>
     <span class="repo-desc">${esc(repo.description ?? "")}</span>
     <span class="repo-meta">
-      ${repo.language ? `<span><i style="background:${LANG_COLOR[repo.language] ?? "#8a919c"}"></i>${esc(repo.language)}</span>` : ""}
-      ${repo.stars ? `<span>★ ${repo.stars}</span>` : ""}
-      <span>${esc(ago(repo.pushed_at))}</span>
+      ${repo.language ? `<span><i data-lang="${esc(repo.language)}"></i>${esc(repo.language)}</span>` : ""}
+      ${repo.stars ? `<span>★ ${Number(repo.stars) || 0}</span>` : ""}
+      <span class="ago">Updated ${esc(ago(repo.pushed_at))}</span>
     </span>
   </a>`;
+}
+
+// ---------------------------------------------------------------- behaviour
+
+const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const revealer =
+  "IntersectionObserver" in window
+    ? new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (!entry.isIntersecting) continue;
+            entry.target.classList.add("in");
+            revealer.unobserve(entry.target);
+          }
+        },
+        { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
+      )
+    : null;
+
+/** Let everything marked data-reveal fade in when it scrolls into view. */
+function watch(root = document) {
+  for (const group of new Set([...root.querySelectorAll("[data-reveal]")].map((el) => el.parentElement))) {
+    // siblings arrive one after the other
+    [...group.children].filter((el) => el.hasAttribute("data-reveal")).forEach((el, i) => el.style.setProperty("--i", String(Math.min(i, 6))));
+  }
+  for (const el of root.querySelectorAll("[data-reveal]:not(.in)")) {
+    if (revealer) revealer.observe(el);
+    else el.classList.add("in");
+  }
+}
+
+/** Cards light up under the pointer. */
+function spotlight() {
+  if (reduceMotion || !window.matchMedia("(hover: hover)").matches) return;
+  document.addEventListener(
+    "pointermove",
+    (e) => {
+      const card = e.target instanceof Element ? e.target.closest(".spot") : null;
+      if (!card) return;
+      const box = card.getBoundingClientRect();
+      card.style.setProperty("--mx", `${e.clientX - box.left}px`);
+      card.style.setProperty("--my", `${e.clientY - box.top}px`);
+    },
+    { passive: true },
+  );
+}
+
+function navState() {
+  const nav = document.getElementById("nav");
+  const update = () => nav.classList.toggle("scrolled", window.scrollY > 12);
+  update();
+  window.addEventListener("scroll", update, { passive: true });
 }
 
 function render(data) {
@@ -162,12 +229,33 @@ function render(data) {
   const others = repos.filter((r) => !APPS[r.name] && (r.release?.assets ?? []).length > 0);
   const apps = [...known, ...others];
 
-  document.getElementById("apps").innerHTML = apps.map((r) => appCard(r, os)).join("");
-  document.getElementById("repos").innerHTML = [...repos].sort((a, b) => b.pushed_at.localeCompare(a.pushed_at)).map(repoRow).join("");
-  document.getElementById("repo-count").textContent = repos.length;
-  document.getElementById("year").textContent = new Date().getFullYear();
+  const appList = document.getElementById("app-list");
+  const repoList = document.getElementById("repo-list");
+  // A refresh must not replay the entrance of what is already on screen.
+  const seen = new Set([...document.querySelectorAll("[data-reveal].in[id], .repo.in")].map((el) => el.id || el.getAttribute("href")));
+
+  appList.innerHTML = apps.map((r) => appCard(r, os)).join("");
+  repoList.innerHTML = [...repos].sort((a, b) => b.pushed_at.localeCompare(a.pushed_at)).map(repoCard).join("");
+
+  for (const el of document.querySelectorAll("#app-list [data-reveal], #repo-list [data-reveal]")) {
+    if (seen.has(el.id || el.getAttribute("href"))) el.classList.add("in");
+  }
+  for (const dot of repoList.querySelectorAll("i[data-lang]")) {
+    dot.style.background = LANG_COLOR[dot.dataset.lang] ?? "#8a919c";
+  }
+
+  const plural = (n, word, many = `${word}s`) => `${n} ${n === 1 ? word : many}`;
+  document.getElementById("eyebrow").textContent = `${plural(apps.length, "app")} · ${plural(repos.length, "repository", "repositories")} · open source`;
+  // The stops on the route in the header carry the names of the apps.
+  document.getElementById("stop-1").textContent = apps[0] ? (APPS[apps[0].name]?.name ?? apps[0].name) : "";
+  document.getElementById("stop-2").textContent = apps[1] ? (APPS[apps[1].name]?.name ?? apps[1].name) : "";
+  document.getElementById("year").textContent = String(new Date().getFullYear());
   if (data.generated) document.getElementById("updated").textContent = `Updated ${ago(data.generated)}`;
+
+  watch();
 }
+
+// --------------------------------------------------------------------- data
 
 async function gh(path) {
   const res = await fetch(`https://api.github.com${path}`, { headers: { accept: "application/vnd.github+json" } });
@@ -178,7 +266,7 @@ async function gh(path) {
 
 /** The newest published release, or null. (Listing avoids a 404 for repositories without one.) */
 async function latestRelease(repo) {
-  const list = (await gh(`/repos/${USER}/${repo}/releases?per_page=5`)) ?? [];
+  const list = (await gh(`/repos/${USER}/${encodeURIComponent(repo)}/releases?per_page=5`)) ?? [];
   return list.find((r) => !r.draft && !r.prerelease) ?? null;
 }
 
@@ -214,14 +302,18 @@ async function live() {
   return { generated: new Date().toISOString(), repos };
 }
 
-const CACHE_KEY = "uyarid.data.v1";
+const CACHE_KEY = "uyarid.data.v2";
 const CACHE_MINUTES = 15;
 
 async function main() {
+  navState();
+  spotlight();
+  watch();
+
   let shown = null;
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
-    if (cached && Date.now() - new Date(cached.generated).getTime() < CACHE_MINUTES * 6e4) {
+    if (cached && Array.isArray(cached.repos) && Date.now() - new Date(cached.generated).getTime() < CACHE_MINUTES * 6e4) {
       render((shown = cached));
       return;
     }
@@ -251,7 +343,7 @@ async function main() {
   } catch (error) {
     // Rate limited or offline: the snapshot is good enough.
     if (!shown) {
-      document.getElementById("apps").innerHTML = `<p class="soon">Could not load the list. See <a href="https://github.com/${USER}">github.com/${USER}</a>.</p>`;
+      document.getElementById("app-list").innerHTML = `<p class="soon">Could not load the list. See <a href="https://github.com/${USER}">github.com/${USER}</a>.</p>`;
     }
     console.info("live refresh skipped:", error.message);
   }

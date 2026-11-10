@@ -6,15 +6,17 @@ The public front page of [uyarid.com](https://uyarid.com): every public reposito
 Plain HTML, CSS and JavaScript. No build step, no dependencies.
 
 **How it gets online:** a push to `main` publishes the page with GitHub Pages
-(`.github/workflows/deploy.yml`, also every six hours for fresh data). The home server's gateway
-(nginx, `~/monitoring/gateway/default.conf` on korels-server) serves `uyarid.com` from that Pages
-site and keeps copies for ten minutes, so a change is live on uyarid.com about ten minutes after
-the push. Nothing has to be deployed on the server.
+(`.github/workflows/deploy.yml`, also every six hours for fresh data). uyarid.com is served from
+that Pages site through a caching proxy, so a change is live about ten minutes after the push.
 
-- `index.html`, `style.css`, `app.js` — the page.
+**What it loads:** only its own files and the public GitHub API. Fonts are served from
+`assets/fonts/`, there are no trackers and no third-party scripts, and a Content-Security-Policy in
+`index.html` enforces that.
+
+- `index.html`, `style.css`, `app.js`, `boot.js` — the page.
 - `data.json` — snapshot of repositories and latest releases, written by `scripts/build-data.mjs`.
   The page renders from it right away, then refreshes itself from the public GitHub API.
-- `assets/` — app icons and screenshots.
+- `assets/` — app icons, screenshots and fonts.
 
 A new repository shows up by itself. A repository with a GitHub Release that has files attached
 gets a download card; add an entry to `APPS` in `app.js` to give it an icon, a screenshot and
