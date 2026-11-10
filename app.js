@@ -8,7 +8,7 @@ const USER = "KorelUyar";
 
 // Cloudflare keeps pictures for hours under their address. Raise this number
 // whenever a file in assets/ is replaced, so visitors get the new one.
-const ASSETS = "2";
+const ASSETS = "3";
 const asset = (path) => `${path}?v=${ASSETS}`;
 
 // Presentation for known apps. A repository that is not listed here still
@@ -17,7 +17,7 @@ const APPS = {
   roomy: {
     name: "Roomy",
     tagline: "See what is on your disk. Delete what you don't need.",
-    points: ["Scans a whole disk in seconds", "Apps, large files, folders and cleanup in one place", "Everything goes to the Trash first"],
+    points: ["Every disk: apps, large files, folders and cleanup in one place", "Bloat Scanner: unwanted software, startup items, security check", "Everything goes to the Trash first"],
     icon: "assets/roomy.png",
     shot: "assets/roomy-shot.png",
     shotShape: "window",
