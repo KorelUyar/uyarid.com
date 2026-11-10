@@ -115,30 +115,44 @@ function downloadsFor(repo, cfg, os) {
   return out.sort((a, b) => (b.os === os) - (a.os === os));
 }
 
-function appCard(repo, os) {
+function appCard(repo, os, index) {
   const cfg = APPS[repo.name];
   const name = cfg?.name ?? repo.name;
   const downloads = downloadsFor(repo, cfg, os);
   const matches = downloads.some((d) => d.os === os);
+  // Highlight the visitor's system; on other devices the first one.
+  const lead = downloads.find((d, i) => (matches ? d.os === os : i === 0));
   const buttons = downloads
-    .map((d, i) => {
-      // Highlight the visitor's system; on other devices the first one.
-      const primary = matches ? d.os === os : i === 0;
-      return `<a class="btn${primary ? " primary" : ""}" href="${esc(safeUrl(d.asset.url))}" rel="noopener">
+    .map((d) => {
+      const primary = d === lead;
+      return `<a class="btn magnet${primary ? " primary" : ""}" href="${esc(safeUrl(d.asset.url))}" rel="noopener">
         ${ICON[d.os] ?? ICON.file}<span>${primary ? "Download for " : ""}${esc(d.label)}</span>
         <small>${esc(size(d.asset.size))}</small></a>`;
     })
     .join("");
   const version = repo.release ? esc(repo.release.tag.replace(/^v/, "")) : "";
   const url = esc(safeUrl(repo.html_url));
-  const stage = cfg?.shot
-    ? `<a class="stage ${cfg.shotShape === "window" ? "window" : "shot"}" href="${url}" rel="noopener" tabindex="-1" aria-hidden="true"><img src="${esc(asset(cfg.shot))}" alt="" loading="lazy" decoding="async"></a>`
-    : "";
-  return `<article class="app spot${stage ? "" : " plain"}" id="app-${esc(repo.name)}" data-reveal>
+  const systems = [...new Set(downloads.filter((d) => d.os !== "file").map((d) => d.label))].join(" + ");
+  const stop = `Stop ${String(index + 1).padStart(2, "0")}${systems ? ` / ${systems}` : ""}`;
+
+  // The stage: the app's window floating in front of a panel in its colour.
+  const picture = cfg?.shot
+    ? `<a class="app-window ${cfg.shotShape === "window" ? "window" : "shot"}" href="${url}" rel="noopener" tabindex="-1" aria-hidden="true"><img src="${esc(asset(cfg.shot))}" alt="" decoding="async"><span class="shine"></span></a>`
+    : `<span class="app-big" aria-hidden="true">${esc(name[0].toUpperCase())}</span>`;
+  const stage = `<div class="app-stage" data-tilt>
+      <span class="app-grid"></span>
+      <span class="app-glow"></span>
+      ${picture}
+      ${version ? `<span class="float f1" aria-hidden="true"><i></i>v${version}</span>` : ""}
+      ${lead ? `<span class="float f2" aria-hidden="true">${esc(size(lead.asset.size))} download</span>` : ""}
+    </div>`;
+
+  return `<article class="app station" data-app="${esc(repo.name.toLowerCase())}" id="app-${esc(repo.name)}" data-reveal>
     ${stage}
-    <div class="app-info">
+    <div class="app-body">
+      <p class="app-stop" data-decode>${esc(stop)}</p>
       <div class="app-title">
-        ${cfg?.icon ? `<img class="app-icon" src="${esc(asset(cfg.icon))}" width="60" height="60" alt="">` : `<span class="app-icon letter">${esc(name[0].toUpperCase())}</span>`}
+        ${cfg?.icon ? `<img class="app-icon" src="${esc(asset(cfg.icon))}" width="68" height="68" alt="">` : `<span class="app-icon letter">${esc(name[0].toUpperCase())}</span>`}
         <h3>${esc(name)}${version ? `<span class="chip">${version}</span>` : ""}</h3>
       </div>
       <p class="app-tagline">${esc(cfg?.tagline ?? repo.description ?? "")}</p>
@@ -156,7 +170,7 @@ function appCard(repo, os) {
 }
 
 function repoCard(repo) {
-  return `<a class="repo spot" href="${esc(safeUrl(repo.html_url))}" rel="noopener" data-reveal>
+  return `<a class="repo spot" href="${esc(safeUrl(repo.html_url))}" rel="noopener" data-reveal data-tilt>
     <span class="repo-top">
       <span class="repo-name">${esc(repo.name)}</span>
       ${repo.release ? `<span class="chip">${esc(repo.release.tag)}</span>` : ""}
@@ -171,58 +185,10 @@ function repoCard(repo) {
   </a>`;
 }
 
-// ---------------------------------------------------------------- behaviour
+// ------------------------------------------------------------------ render
+// What moves lives in fx.js. If it did not start, nothing may stay hidden.
 
-const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-const revealer =
-  "IntersectionObserver" in window
-    ? new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) {
-            if (!entry.isIntersecting) continue;
-            entry.target.classList.add("in");
-            revealer.unobserve(entry.target);
-          }
-        },
-        { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
-      )
-    : null;
-
-/** Let everything marked data-reveal fade in when it scrolls into view. */
-function watch(root = document) {
-  for (const group of new Set([...root.querySelectorAll("[data-reveal]")].map((el) => el.parentElement))) {
-    // siblings arrive one after the other
-    [...group.children].filter((el) => el.hasAttribute("data-reveal")).forEach((el, i) => el.style.setProperty("--i", String(Math.min(i, 6))));
-  }
-  for (const el of root.querySelectorAll("[data-reveal]:not(.in)")) {
-    if (revealer) revealer.observe(el);
-    else el.classList.add("in");
-  }
-}
-
-/** Cards light up under the pointer. */
-function spotlight() {
-  if (reduceMotion || !window.matchMedia("(hover: hover)").matches) return;
-  document.addEventListener(
-    "pointermove",
-    (e) => {
-      const card = e.target instanceof Element ? e.target.closest(".spot") : null;
-      if (!card) return;
-      const box = card.getBoundingClientRect();
-      card.style.setProperty("--mx", `${e.clientX - box.left}px`);
-      card.style.setProperty("--my", `${e.clientY - box.top}px`);
-    },
-    { passive: true },
-  );
-}
-
-function navState() {
-  const nav = document.getElementById("nav");
-  const update = () => nav.classList.toggle("scrolled", window.scrollY > 12);
-  update();
-  window.addEventListener("scroll", update, { passive: true });
-}
+if (!window.uyaridFx) document.documentElement.classList.remove("js");
 
 function render(data) {
   const os = visitorOS();
@@ -239,7 +205,7 @@ function render(data) {
   // A refresh must not replay the entrance of what is already on screen.
   const seen = new Set([...document.querySelectorAll("[data-reveal].in[id], .repo.in")].map((el) => el.id || el.getAttribute("href")));
 
-  appList.innerHTML = apps.map((r) => appCard(r, os)).join("");
+  appList.innerHTML = apps.map((r, i) => appCard(r, os, i)).join("");
   repoList.innerHTML = [...repos].sort((a, b) => b.pushed_at.localeCompare(a.pushed_at)).map(repoCard).join("");
 
   for (const el of document.querySelectorAll("#app-list [data-reveal], #repo-list [data-reveal]")) {
@@ -247,6 +213,13 @@ function render(data) {
   }
   for (const dot of repoList.querySelectorAll("i[data-lang]")) {
     dot.style.background = LANG_COLOR[dot.dataset.lang] ?? "#8a919c";
+  }
+  // The light that glides over a window keeps to the window's own outline.
+  for (const shine of appList.querySelectorAll(".app-window.window .shine")) {
+    const src = shine.previousElementSibling?.getAttribute("src");
+    if (!src) continue;
+    shine.style.webkitMaskImage = shine.style.maskImage = `url("${src}")`;
+    shine.style.webkitMaskSize = shine.style.maskSize = "100% 100%";
   }
 
   const plural = (n, word, many = `${word}s`) => `${n} ${n === 1 ? word : many}`;
@@ -257,7 +230,7 @@ function render(data) {
   document.getElementById("year").textContent = String(new Date().getFullYear());
   if (data.generated) document.getElementById("updated").textContent = `Updated ${ago(data.generated)}`;
 
-  watch();
+  document.dispatchEvent(new Event("uyarid:render"));
 }
 
 // --------------------------------------------------------------------- data
@@ -311,10 +284,6 @@ const CACHE_KEY = "uyarid.data.v2";
 const CACHE_MINUTES = 15;
 
 async function main() {
-  navState();
-  spotlight();
-  watch();
-
   let shown = null;
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");

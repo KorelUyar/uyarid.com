@@ -1,89 +1,78 @@
 {
-  "generated": "2026-11-10T19:11:44.188Z",
+  "generated": "2026-11-10T21:49:00.483Z",
   "repos": [
     {
       "name": "uyarid.com",
       "description": "The public front page of uyarid.com: my apps to download and my open-source repositories.",
-      "language": null,
+      "language": "CSS",
       "stars": 0,
-      "pushed_at": "2026-11-10T18:48:29Z",
+      "pushed_at": "2026-11-10T21:12:19Z",
       "html_url": "https://github.com/KorelUyar/uyarid.com",
       "fork": false,
       "archived": false,
       "release": null
     },
     {
-      "name": "roomy",
-      "description": "See what is on your disk and delete what you don't need. A clean, fast disk space app for macOS and Windows.",
-      "language": null,
-      "stars": 0,
-      "pushed_at": "2026-11-10T18:28:47Z",
-      "html_url": "https://github.com/KorelUyar/roomy",
-      "fork": false,
-      "archived": false,
-      "release": {
-        "tag": "v0.1.0",
-        "published_at": "2026-11-10T18:36:41Z",
-        "assets": [
-          {
-            "name": "install.sh",
-            "size": 1048,
-            "url": "https://github.com/KorelUyar/roomy/releases/download/v0.1.0/install.sh"
-          },
-          {
-            "name": "Roomy-macOS.dmg",
-            "size": 4601407,
-            "url": "https://github.com/KorelUyar/roomy/releases/download/v0.1.0/Roomy-macOS.dmg"
-          },
-          {
-            "name": "Roomy-macOS.zip",
-            "size": 4448117,
-            "url": "https://github.com/KorelUyar/roomy/releases/download/v0.1.0/Roomy-macOS.zip"
-          },
-          {
-            "name": "Roomy-Windows-Setup.exe",
-            "size": 1664674,
-            "url": "https://github.com/KorelUyar/roomy/releases/download/v0.1.0/Roomy-Windows-Setup.exe"
-          }
-        ]
-      }
-    },
-    {
       "name": "tailbolt",
       "description": "AirDrop for your whole tailnet — send files of any size to any Tailscale device, including other people's. Native macOS menu-bar app.",
       "language": "Swift",
       "stars": 0,
-      "pushed_at": "2026-10-29T13:31:41Z",
+      "pushed_at": "2026-11-10T21:04:00Z",
       "html_url": "https://github.com/KorelUyar/tailbolt",
       "fork": false,
       "archived": false,
       "release": {
-        "tag": "v2.3.0",
-        "published_at": "2026-10-29T13:31:41Z",
+        "tag": "v2.3.1",
+        "published_at": "2026-11-10T21:04:00Z",
         "assets": [
           {
             "name": "Install.Tailbolt.command",
             "size": 1483,
-            "url": "https://github.com/KorelUyar/tailbolt/releases/download/v2.3.0/Install.Tailbolt.command"
+            "url": "https://github.com/KorelUyar/tailbolt/releases/download/v2.3.1/Install.Tailbolt.command"
           },
           {
             "name": "Tailbolt.zip",
-            "size": 5375496,
-            "url": "https://github.com/KorelUyar/tailbolt/releases/download/v2.3.0/Tailbolt.zip"
+            "size": 5350519,
+            "url": "https://github.com/KorelUyar/tailbolt/releases/download/v2.3.1/Tailbolt.zip"
           }
         ]
       }
     },
     {
-      "name": "killer-sudoku",
-      "description": "Premium Killer Sudoku web app · Skills Battle 2026 · Next.js 15 · Prisma · MySQL",
-      "language": "TypeScript",
-      "stars": 1,
-      "pushed_at": "2026-08-17T19:15:23Z",
-      "html_url": "https://github.com/KorelUyar/killer-sudoku",
+      "name": "roomy",
+      "description": "See what is on your disk and delete what you don't need. A clean, fast disk space app for macOS and Windows.",
+      "language": "Rust",
+      "stars": 0,
+      "pushed_at": "2026-11-10T21:03:47Z",
+      "html_url": "https://github.com/KorelUyar/roomy",
       "fork": false,
       "archived": false,
-      "release": null
+      "release": {
+        "tag": "v0.2.0",
+        "published_at": "2026-11-10T21:11:27Z",
+        "assets": [
+          {
+            "name": "install.sh",
+            "size": 1048,
+            "url": "https://github.com/KorelUyar/roomy/releases/download/v0.2.0/install.sh"
+          },
+          {
+            "name": "Roomy-macOS.dmg",
+            "size": 4762707,
+            "url": "https://github.com/KorelUyar/roomy/releases/download/v0.2.0/Roomy-macOS.dmg"
+          },
+          {
+            "name": "Roomy-macOS.zip",
+            "size": 4609849,
+            "url": "https://github.com/KorelUyar/roomy/releases/download/v0.2.0/Roomy-macOS.zip"
+          },
+          {
+            "name": "Roomy-Windows-Setup.exe",
+            "size": 1738019,
+            "url": "https://github.com/KorelUyar/roomy/releases/download/v0.2.0/Roomy-Windows-Setup.exe"
+          }
+        ]
+      }
     }
   ]
 }

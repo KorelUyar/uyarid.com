@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#08090b">
+  <meta name="theme-color" content="#050609">
   <meta name="color-scheme" content="dark">
-  <!-- Only this site and the GitHub API. No inline scripts, no third-party anything. -->
+  <!-- Only this site and the GitHub API. No inline scripts or styles, no third-party anything. -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://api.github.com; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>uyarid · apps and open source by Korel Uyar</title>
@@ -14,23 +14,32 @@
   <meta property="og:description" content="Small, fast desktop apps by Korel Uyar. Free to download, open source.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://uyarid.com/">
-  <meta property="og:image" content="https://uyarid.com/assets/og.png">
+  <meta property="og:image" content="https://uyarid.com/assets/og.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://uyarid.com/">
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/instrument-serif-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css?v=__V__">
   <script src="boot.js?v=__V__"></script>
 </head>
 <body>
   <a class="skip" href="#apps">Skip to the apps</a>
 
+  <!-- What moves behind the page: soft light (a shader where the browser can, plain gradients otherwise) and film grain. -->
+  <div class="backdrop" aria-hidden="true">
+    <div class="blobs"><i></i><i></i><i></i></div>
+    <canvas id="aurora"></canvas>
+    <div class="grain"></div>
+  </div>
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+
   <header class="nav" id="nav">
-    <div class="wrap nav-inner">
+    <div class="nav-pill">
       <a class="brand" href="./" aria-label="uyarid, start page">
-        <svg class="mark" viewBox="0 0 32 32" width="30" height="30" aria-hidden="true">
+        <svg class="mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
           <rect width="32" height="32" rx="7.5" class="mark-bg"/>
           <g fill="none" stroke-width="4" class="mark-lines">
             <path pathLength="1" d="M6 4V8.343A4 4 0 0 0 7.172 11.172L10.828 14.828A4 4 0 0 0 13.657 16H24"/>
@@ -41,83 +50,162 @@
         <span>uyarid</span>
       </a>
       <nav class="nav-links" aria-label="Sections">
-        <a href="#apps">Apps</a>
-        <a href="#repos">Repositories</a>
+        <a href="#apps" data-section="apps">Apps</a>
+        <a href="#repos" data-section="repos">Repositories</a>
         <a class="nav-gh" href="https://github.com/KorelUyar" rel="noopener">
           GitHub
           <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7"/><path d="M8 7h9v9"/></svg>
         </a>
       </nav>
+      <span class="nav-progress" aria-hidden="true"></span>
     </div>
   </header>
 
   <main>
-    <section class="hero">
-      <!-- The two lines of the logo, continued as a route map. Each app is a stop. -->
+    <section class="hero" id="top">
+      <!-- The two lines of the logo, grown into a whole network. Every app is a stop on the main line. -->
       <div class="map" aria-hidden="true">
-        <svg viewBox="0 0 760 560" preserveAspectRatio="xMaxYMid slice">
-          <g class="routes" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path class="route r1" pathLength="1" d="M92 -20V118Q92 142 109 159L236 286Q253 303 253 327V580"/>
-            <path class="route r2" pathLength="1" d="M-20 132H318Q342 132 359 149L486 276Q503 293 503 317V580"/>
-            <path class="route r3" pathLength="1" d="M780 418H642Q618 418 601 435L524 512Q507 529 483 529H-20"/>
-            <path class="route main" id="main-route" pathLength="1" d="M-20 404H138Q162 404 179 387L263 303Q280 286 304 286H434Q458 286 475 269L559 185Q576 168 600 168H780"/>
-          </g>
-          <rect class="train" width="26" height="9" rx="4.5" x="-13" y="-4.5"/>
-          <g class="stops">
-            <g class="stop s1"><circle cx="369" cy="286" r="9"/><text x="369" y="322" text-anchor="middle" id="stop-1"></text></g>
-            <g class="stop s2"><circle cx="672" cy="168" r="9"/><text x="672" y="204" text-anchor="middle" id="stop-2"></text></g>
-            <g class="stop s3 minor"><circle cx="92" cy="404" r="6"/></g>
-            <g class="stop s4 minor"><circle cx="253" cy="313" r="6"/></g>
-            <g class="stop s5 minor"><circle cx="503" cy="241" r="6"/></g>
+        <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <path id="route-a" pathLength="1" d="M-60 700L240 700Q270 700 291.2 678.8L448.8 521.2Q470 500 500 500L730 500Q760 500 781.2 478.8L938.8 321.2Q960 300 990 300L1070 300Q1100 300 1121.2 278.8L1188.8 211.2Q1210 190 1240 190L1500 190"/>
+            <path id="route-b" pathLength="1" d="M200 -60L200 170Q200 200 221.2 221.2L308.8 308.8Q330 330 330 360L330 590Q330 620 351.2 641.2L448.8 738.8Q470 760 470 790L470 960"/>
+            <path id="route-c" pathLength="1" d="M1500 650L1280 650Q1250 650 1228.8 671.2L1131.2 768.8Q1110 790 1080 790L790 790Q760 790 738.8 811.2L657.7 892.3Q640 910 640 935L640 960"/>
+            <path id="route-d" pathLength="1" d="M1350 -60L1350 60Q1350 90 1328.8 111.2L1221.2 218.8Q1200 240 1200 270L1200 530Q1200 560 1221.2 581.2L1308.8 668.8Q1330 690 1330 720L1330 960"/>
+            <path id="route-e" pathLength="1" d="M-60 260L80 260Q110 260 131.2 238.8L228.8 141.2Q250 120 280 120L670 120Q700 120 721.2 98.8L798.8 21.2Q820 0 820 -30L820 -60"/>
+          </defs>
+          <g class="map-move" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <g class="tracks">
+              <use href="#route-a"/><use href="#route-b"/><use href="#route-c"/><use href="#route-d"/><use href="#route-e"/>
+            </g>
+            <g class="routes">
+              <use href="#route-e" class="route e"/>
+              <use href="#route-d" class="route d"/>
+              <use href="#route-c" class="route c"/>
+              <use href="#route-b" class="route b"/>
+              <use href="#route-a" class="route a"/>
+            </g>
+            <g class="trains">
+              <use href="#route-e" class="glow e"/><use href="#route-e" class="train e"/>
+              <use href="#route-d" class="glow d"/><use href="#route-d" class="train d"/>
+              <use href="#route-c" class="glow c"/><use href="#route-c" class="train c"/>
+              <use href="#route-b" class="glow b"/><use href="#route-b" class="train b"/>
+              <use href="#route-a" class="glow a"/><use href="#route-a" class="train a"/>
+              <use href="#route-a" class="glow a late"/><use href="#route-a" class="train a late"/>
+            </g>
+            <g class="stops">
+              <circle class="stop minor" cx="330" cy="470" r="6"/>
+              <circle class="stop minor" cx="480" cy="120" r="6"/>
+              <circle class="stop minor" cx="1030" cy="300" r="6"/>
+              <circle class="stop minor" cx="930" cy="790" r="6"/>
+              <circle class="stop minor" cx="1200" cy="400" r="6"/>
+              <circle class="stop cross" cx="340" cy="630" r="10"/>
+              <circle class="stop cross" cx="200" cy="170" r="10"/>
+              <circle class="stop cross" cx="1250" cy="190" r="10"/>
+              <circle class="stop cross" cx="1290" cy="650" r="10"/>
+              <g class="stop app one">
+                <circle class="ring" cx="130" cy="700" r="12"/>
+                <circle class="dot" cx="130" cy="700" r="11"/>
+                <text x="130" y="662" text-anchor="middle" id="stop-1"></text>
+              </g>
+              <g class="stop app two">
+                <circle class="ring" cx="1380" cy="190" r="12"/>
+                <circle class="dot" cx="1380" cy="190" r="11"/>
+                <text x="1380" y="238" text-anchor="middle" id="stop-2"></text>
+              </g>
+            </g>
           </g>
         </svg>
       </div>
 
       <div class="wrap hero-inner">
         <p class="eyebrow"><i></i><span id="eyebrow">Free and open source</span></p>
-        <h1>
-          <span class="line"><span>Apps and open source</span></span>
-          <span class="line"><span class="accent">by Korel Uyar.</span></span>
+        <h1 aria-label="Apps that are small, fast, free and open source.">
+          <span class="h-line" aria-hidden="true"><span class="w">Apps</span> <span class="w">that</span> <span class="w">are</span></span>
+          <span class="h-line rot" id="rot" aria-hidden="true"><span class="rot-word on">small.</span></span>
         </h1>
-        <p class="lede">Small tools I build for myself and put online. Free to download, no account, source included.</p>
+        <p class="lede">Tools I build for myself and put online for everyone. Free to download, no account, source included. <span class="by">— Korel Uyar</span></p>
         <div class="hero-actions">
-          <a class="btn primary" href="#apps">
-            <span>See the apps</span>
-            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m6 13 6 6 6-6"/></svg>
+          <a class="btn primary magnet" href="#apps">
+            <span>Get the apps</span>
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m6 13 6 6 6-6"/></svg>
           </a>
-          <a class="btn" href="#repos"><span>Browse the code</span></a>
+          <a class="btn magnet" href="#repos"><span>Browse the code</span></a>
         </div>
       </div>
+
+      <a class="scroll-cue" href="#apps" aria-label="Scroll to the apps"><span></span></a>
     </section>
 
-    <section class="wrap section" id="apps" aria-labelledby="apps-title">
-      <header class="section-head" data-reveal>
-        <span class="index">01</span>
-        <h2 id="apps-title">Apps</h2>
-        <p>Download, open, done. No sign-up.</p>
-      </header>
-      <div class="apps" id="app-list">
-        <div class="app skeleton" aria-hidden="true"></div>
-        <div class="app skeleton" aria-hidden="true"></div>
+    <!-- A departure board that never stops. Decoration: the same facts are in the text. -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-row">
+        <div class="ticker-track" data-ticker>
+          <span>Free</span><b></b><span class="hollow">Open source</span><b></b><span>No sign-up</span><b></b><span class="hollow">No ads</span><b></b><span>MIT licensed</span><b></b><span class="hollow">Source included</span><b></b>
+        </div>
       </div>
-    </section>
+      <div class="ticker-row back">
+        <div class="ticker-track" data-ticker>
+          <span class="hollow">macOS</span><b></b><span>Windows</span><b></b><span class="hollow">A few megabytes</span><b></b><span>Built for myself</span><b></b><span class="hollow">Shared with you</span><b></b><span>Download, open, done</span><b></b>
+        </div>
+      </div>
+    </div>
 
-    <section class="wrap section" id="repos" aria-labelledby="repos-title">
-      <header class="section-head" data-reveal>
-        <span class="index">02</span>
-        <h2 id="repos-title">Repositories</h2>
-        <p id="repo-sub">Everything I have published on GitHub.</p>
-      </header>
-      <div class="repos" id="repo-list"></div>
-    </section>
+    <div class="journey" id="journey">
+      <!-- The line you travel while scrolling. -->
+      <div class="rail" id="rail" aria-hidden="true">
+        <span class="rail-fill"></span>
+        <span class="rail-train"></span>
+      </div>
+
+      <section class="wrap section" id="apps" aria-labelledby="apps-title">
+        <header class="section-head station" data-reveal>
+          <span class="index" aria-hidden="true">01</span>
+          <div>
+            <p class="kicker" data-decode>Line 01 / Apps</p>
+            <h2 id="apps-title">Apps</h2>
+            <p class="section-sub">Download, open, done. No sign-up.</p>
+          </div>
+        </header>
+        <div class="apps" id="app-list">
+          <div class="app skeleton" aria-hidden="true"></div>
+          <div class="app skeleton" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <section class="wrap section" id="repos" aria-labelledby="repos-title">
+        <header class="section-head station" data-reveal>
+          <span class="index" aria-hidden="true">02</span>
+          <div>
+            <p class="kicker" data-decode>Line 02 / Code</p>
+            <h2 id="repos-title">Repositories</h2>
+            <p class="section-sub" id="repo-sub">Everything I have published on GitHub.</p>
+          </div>
+        </header>
+        <div class="repos" id="repo-list"></div>
+        <a class="more spot" href="https://github.com/KorelUyar" rel="noopener" data-reveal>
+          <span>Follow the work on GitHub</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m13 6 6 6-6 6"/></svg>
+        </a>
+      </section>
+    </div>
   </main>
 
-  <footer class="wrap footer">
-    <span>© <span id="year">2026</span> Korel Uyar</span>
-    <span id="updated"></span>
+  <footer class="footer" id="footer">
+    <div class="wordmark" aria-hidden="true">
+      <span class="wm-outline">uyarid</span>
+      <span class="wm-fill">uyarid</span>
+    </div>
+    <div class="wrap footer-row">
+      <span>© <span id="year">2026</span> Korel Uyar</span>
+      <span id="updated"></span>
+      <a href="#top" class="to-top">Back to the top
+        <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"/><path d="m6 11 6-6 6 6"/></svg>
+      </a>
+    </div>
   </footer>
 
   <noscript><p class="noscript">This page lists my apps and repositories with JavaScript. Without it, see <a href="https://github.com/KorelUyar">github.com/KorelUyar</a>.</p></noscript>
+  <script src="fx.js?v=__V__" defer></script>
   <script src="app.js?v=__V__" defer></script>
 </body>
 </html>
