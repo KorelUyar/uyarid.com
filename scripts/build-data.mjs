@@ -22,7 +22,8 @@ async function gh(path) {
 const list = (await gh(`/users/${USER}/repos?type=owner&sort=pushed&per_page=100`)).filter((r) => !r.private);
 const repos = [];
 for (const r of list) {
-  const rel = r.fork ? null : await gh(`/repos/${USER}/${r.name}/releases/latest`);
+  const releases = r.fork ? [] : ((await gh(`/repos/${USER}/${r.name}/releases?per_page=5`)) ?? []);
+  const rel = releases.find((x) => !x.draft && !x.prerelease) ?? null;
   repos.push({
     name: r.name,
     description: r.description,

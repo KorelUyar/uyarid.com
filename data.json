@@ -1,6 +1,17 @@
 {
-  "generated": "2026-11-10T18:13:10.077Z",
+  "generated": "2026-11-10T18:14:48.845Z",
   "repos": [
+    {
+      "name": "uyarid.com",
+      "description": "The public front page of uyarid.com: my apps to download and my open-source repositories.",
+      "language": null,
+      "stars": 0,
+      "pushed_at": "2026-11-10T18:13:17Z",
+      "html_url": "https://github.com/KorelUyar/uyarid.com",
+      "fork": false,
+      "archived": false,
+      "release": null
+    },
     {
       "name": "roomy",
       "description": "See what is on your disk and delete what you don't need. A clean, fast disk space app for macOS and Windows.",

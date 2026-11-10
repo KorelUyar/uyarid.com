@@ -176,6 +176,12 @@ async function gh(path) {
   return res.json();
 }
 
+/** The newest published release, or null. (Listing avoids a 404 for repositories without one.) */
+async function latestRelease(repo) {
+  const list = (await gh(`/repos/${USER}/${repo}/releases?per_page=5`)) ?? [];
+  return list.find((r) => !r.draft && !r.prerelease) ?? null;
+}
+
 /** Same shape as data.json, straight from the public GitHub API. */
 async function live() {
   const list = await gh(`/users/${USER}/repos?type=owner&sort=pushed&per_page=100`);
@@ -183,7 +189,7 @@ async function live() {
     list
       .filter((r) => !r.private)
       .map(async (r) => {
-        const rel = r.fork ? null : await gh(`/repos/${USER}/${r.name}/releases/latest`).catch(() => undefined);
+        const rel = r.fork ? null : await latestRelease(r.name).catch(() => undefined);
         return {
           name: r.name,
           description: r.description,
