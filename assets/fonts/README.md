@@ -1,9 +1,8 @@
-# Fonts
+# Font
 
 Served from this site, so no visitor data goes to a font provider.
 
-- `inter-latin.woff2` — [Inter](https://rsms.me/inter/) by Rasmus Andersson (variable, Latin subset)
-- `jetbrains-mono-latin.woff2` — [JetBrains Mono](https://www.jetbrains.com/lp/mono/) Medium (Latin subset)
-- `instrument-serif-italic-latin.woff2` — [Instrument Serif](https://github.com/Instrument/instrument-serif) Italic (Latin subset)
+- `instrument-sans-latin.woff2` — [Instrument Sans](https://github.com/Instrument/instrument-sans)
+  by Instrument (variable weight 400–700 and width 75–100, Latin subset)
 
-All are licensed under the [SIL Open Font License 1.1](https://openfontlicense.org).
+Licensed under the [SIL Open Font License 1.1](https://openfontlicense.org).

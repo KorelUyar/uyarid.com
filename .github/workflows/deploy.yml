@@ -36,11 +36,9 @@ jobs:
         run: |
           if node scripts/build-data.mjs > data.new; then mv data.new data.json; else echo "GitHub API failed, keeping the committed snapshot"; rm -f data.new; fi
       - name: Assemble
-        run: |
-          mkdir _site
-          cp -r index.html style.css app.js fx.js boot.js data.json assets _site/
-          # Cloudflare keeps css and js for hours: a new address per commit avoids stale copies.
-          sed -i "s/__V__/${GITHUB_SHA::8}/g" _site/index.html
+        # Writes the lists into index.html and stamps the commit into the css/js addresses
+        # (Cloudflare keeps those for hours: a new address per commit avoids stale copies).
+        run: node scripts/build-site.mjs _site "${GITHUB_SHA::8}"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
