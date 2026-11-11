@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#f4f4f2" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#1b1b1c" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f6f5f2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#141415" media="(prefers-color-scheme: dark)">
   <!-- Only this site and the GitHub API. No inline scripts or styles, no third-party anything. -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://api.github.com; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -20,19 +20,21 @@
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://uyarid.com/">
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="assets/favicon.svg?v=2" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/parkinsans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/instrument-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="style.css?v=__V__">
+  <script src="boot.js?v=__V__"></script>
 </head>
 <body>
   <a class="skip" href="#apps">Skip to the apps</a>
 
   <header class="wrap top">
     <a class="brand" href="./" aria-label="uyarid, start page">
-      <svg class="mark" viewBox="2 2 28 28" width="26" height="26" aria-hidden="true">
+      <svg class="mark" viewBox="2 2 28 28" width="28" height="28" aria-hidden="true">
         <g fill="none" stroke-width="4" stroke-linecap="butt" class="mark-lines">
-          <path d="M6 4V8.343A4 4 0 0 0 7.172 11.172L10.828 14.828A4 4 0 0 0 13.657 16H24"/>
-          <path d="M24 4V17.343A4 4 0 0 1 22.828 20.172L16 27"/>
+          <path pathLength="1" d="M6 4V8.343A4 4 0 0 0 7.172 11.172L10.828 14.828A4 4 0 0 0 13.657 16H24"/>
+          <path pathLength="1" d="M24 4V17.343A4 4 0 0 1 22.828 20.172L16 27"/>
         </g>
         <circle cx="24" cy="16" r="3" stroke-width="2" class="mark-stop"/>
       </svg>
@@ -45,18 +47,20 @@
     </nav>
   </header>
 
-  <main class="wrap">
-    <section class="intro">
-      <h1>Apps and open source by Korel&nbsp;Uyar.</h1>
-      <p>Small tools I build for myself and put online.</p>
+  <main>
+    <section class="wrap hero">
+      <h1><span class="ln"><span>Apps and open source</span></span> <span class="ln"><span>by Korel&nbsp;Uyar.</span></span></h1>
+      <p class="hero-sub">Small tools I build for myself and put online.</p>
+      <!-- scripts/build-site.mjs writes the shelf, the apps and the repositories in here before the page
+           goes online; app.js keeps them current. -->
+      <div class="shelf" id="shelf"><!--shelf--></div>
     </section>
 
-    <section id="apps" aria-label="Apps">
-      <!-- scripts/build-site.mjs writes the apps in here before the page goes online; app.js keeps them current. -->
+    <section class="wrap" id="apps" aria-label="Apps">
       <div class="apps" id="app-list"><!--apps--></div>
     </section>
 
-    <section id="repositories" aria-labelledby="repositories-title">
+    <section class="wrap" id="repositories" aria-labelledby="repositories-title">
       <header class="section-head">
         <h2 id="repositories-title">Repositories</h2>
         <p>Everything I have published on GitHub, newest first.</p>

@@ -18,24 +18,46 @@ function visitorOS() {
 }
 
 // ------------------------------------------------------------------ gallery
-// A row of named pictures per app. It goes through them once by itself, a
-// few seconds each, unless someone takes over: pointing at it waits, choosing
-// a picture or pressing the button stops it.
+// Per app: a list of what there is to see, and the picture that goes with
+// the chosen line. It goes through them once by itself, a few seconds each,
+// unless someone takes over: pointing at it waits, choosing a line or
+// pressing the button stops it.
 
-const viewing =
-  "IntersectionObserver" in window
-    ? new IntersectionObserver(
-        (entries) => {
-          for (const entry of entries) entry.target.classList.toggle("away", !entry.isIntersecting);
-        },
-        { threshold: 0.35 },
-      )
-    : null;
+const observers = "IntersectionObserver" in window;
+
+// while a gallery is not on screen it waits
+const viewing = observers
+  ? new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) entry.target.classList.toggle("away", !entry.isIntersecting);
+      },
+      { threshold: 0.35 },
+    )
+  : null;
+
+// the first time it comes into view it arrives (see "arriving" in style.css)
+const arriving = observers
+  ? new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const el = entry.target;
+          el.classList.add("in", "arriving");
+          setTimeout(() => el.classList.remove("arriving"), 1600); // the window opens only this once
+          arriving.unobserve(el);
+        }
+      },
+      { threshold: 0.4 },
+    )
+  : null;
+// Not during the opening: on a tall screen the first app is in view from the
+// start, and two things arriving at once is one too many.
+const opened = 1300;
 
 function startGallery(el) {
   const slides = [...el.querySelectorAll(".slide")];
-  const tabs = [...el.querySelectorAll(".tab")];
-  const strip = el.querySelector(".tabs");
+  const tabs = [...el.querySelectorAll(".feature")];
+  const strip = el.querySelector(".features");
   const caption = el.querySelector(".caption");
   const toggle = el.querySelector(".playpause");
   const stage = el.querySelector(".stage");
@@ -57,7 +79,12 @@ function startGallery(el) {
   const show = (i) => {
     const next = (i + slides.length) % slides.length;
     load(next);
-    slides.forEach((slide, k) => slide.classList.toggle("on", k === next));
+    // Pictures before the current one wait on one side, those after it on the
+    // other, so a change always moves the way the list does.
+    slides.forEach((slide, k) => {
+      slide.classList.toggle("on", k === next);
+      slide.classList.toggle("before", k < next);
+    });
     tabs.forEach((tab, k) => {
       tab.setAttribute("aria-selected", String(k === next));
       tab.tabIndex = k === next ? 0 : -1;
@@ -84,15 +111,15 @@ function startGallery(el) {
       setPlaying(false);
       show(i);
     });
-    // The line under the current name has run to its end: next picture, and
+    // The line beside the current name has run to its end: next picture, and
     // after the last one back to the first, where it rests.
-    tab.addEventListener("animationend", () => {
-      if (!playing() || i !== current) return;
+    tab.addEventListener("animationend", (e) => {
+      if (e.animationName !== "fill" || !playing() || i !== current) return;
       if (current === slides.length - 1) setPlaying(false);
       show(current + 1);
     });
     tab.addEventListener("keydown", (e) => {
-      const to = { ArrowRight: current + 1, ArrowLeft: current - 1, Home: 0, End: slides.length - 1 }[e.key];
+      const to = { ArrowDown: current + 1, ArrowRight: current + 1, ArrowUp: current - 1, ArrowLeft: current - 1, Home: 0, End: slides.length - 1 }[e.key];
       if (to === undefined) return;
       e.preventDefault();
       setPlaying(false);
@@ -103,9 +130,9 @@ function startGallery(el) {
   toggle?.addEventListener("click", () => setPlaying(!playing()));
   if (toggle) toggle.hidden = false;
 
-  // waiting while someone looks closely, stopping when they start to operate it
-  el.addEventListener("pointerenter", () => el.classList.add("hold"));
-  el.addEventListener("pointerleave", () => el.classList.remove("hold"));
+  // It stops as soon as someone starts to operate it. (A pointer that merely
+  // rests on the page does not stop it: it goes round only once anyway, and
+  // the button is there.)
   el.addEventListener("focusin", (e) => {
     if (e.target !== toggle) setPlaying(false);
   });
@@ -137,11 +164,29 @@ function startGallery(el) {
 
   show(0);
   if (viewing) viewing.observe(el);
+  if (arriving) setTimeout(() => arriving.observe(el), Math.max(0, opened - performance.now()));
+  else el.classList.add("in");
   setPlaying(slides.length > 1 && !reduceMotion);
 }
 
 document.addEventListener("visibilitychange", () => {
   for (const el of document.querySelectorAll("[data-gallery]")) el.classList.toggle("hold", document.hidden);
+});
+
+// A download button says so when it has been pressed.
+document.addEventListener("click", (e) => {
+  const button = e.target instanceof Element ? e.target.closest(".buttons a.btn") : null;
+  const label = button?.querySelector("span");
+  if (!label || button.classList.contains("going")) return;
+  const text = label.textContent;
+  button.style.minWidth = `${button.offsetWidth}px`; // the shorter word must not shrink the button
+  label.textContent = "Downloading…";
+  button.classList.add("going");
+  setTimeout(() => {
+    label.textContent = text;
+    button.classList.remove("going");
+    button.style.minWidth = "";
+  }, 2200);
 });
 
 document.addEventListener("click", async (e) => {
@@ -158,15 +203,33 @@ document.addEventListener("click", async (e) => {
 
 // ------------------------------------------------------------------- render
 
+const shelf = document.getElementById("shelf");
 const appList = document.getElementById("app-list");
 const repoList = document.getElementById("repo-list");
 // What is on the page right now, as marks (see fingerprint in render.js). A
 // page that came with its lists written in carries them as data-print.
-const drawn = { apps: appList.dataset.print ?? "", repos: repoList.dataset.print ?? "" };
+const drawn = { shelf: shelf.dataset.print ?? "", apps: appList.dataset.print ?? "", repos: repoList.dataset.print ?? "" };
 let started = false;
+
+function startGalleries() {
+  started = true;
+  for (const el of appList.querySelectorAll("[data-gallery]")) startGallery(el);
+}
+
+// The page came with its apps written in: their pictures work at once, whatever
+// happens to the data afterwards.
+if (drawn.apps) startGalleries();
+// boot.js waits for this before it lets anything start out of sight.
+window.uyaridReady = true;
 
 function render(data) {
   const html = renderLists(data, visitorOS());
+
+  const onShelf = fingerprint(html.shelf);
+  if (onShelf !== drawn.shelf) {
+    drawn.shelf = onShelf;
+    shelf.innerHTML = html.shelf;
+  }
 
   // Fresh numbers usually say the same as what is there. Only what changed is
   // drawn again, so a picture someone is looking at is not reset under them.
@@ -176,10 +239,7 @@ function render(data) {
     appList.innerHTML = html.apps;
     started = false;
   }
-  if (!started) {
-    started = true;
-    for (const el of appList.querySelectorAll("[data-gallery]")) startGallery(el);
-  }
+  if (!started) startGalleries();
 
   const repos = fingerprint(html.repos);
   if (repos !== drawn.repos) {

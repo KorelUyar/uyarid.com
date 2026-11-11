@@ -15,12 +15,14 @@ that Pages site through a caching proxy, so a change is live about ten minutes a
 `index.html` enforces that.
 
 - `index.html`, `style.css` — the page and its look.
-- `render.js` — what the page says: turns the data into the HTML of the apps and the repository
-  list. No document, no window, so it runs in the browser and in Node alike.
+- `boot.js` — one line that runs before the first paint and tells the stylesheet that scripts
+  work (only then may an app's pictures start out of sight, to arrive when scrolled to).
+- `render.js` — what the page says: turns the data into the HTML of the shelf, the apps and the
+  repository list. No document, no window, so it runs in the browser and in Node alike.
 - `app.js` — what the page does: runs the pictures of each app, and redraws a list when fresh
   data says something else than what is there.
 - `data.json` — snapshot of repositories and latest releases, written by `scripts/build-data.mjs`.
-- `scripts/build-site.mjs` — puts the site together the way it goes online: it writes both lists
+- `scripts/build-site.mjs` — puts the site together the way it goes online: it writes the lists
   into `index.html` with `render.js`. The page is complete before any script has run, and for
   readers without one.
 - `assets/` — app icons, the pictures of each app (`assets/<app>/`) and the font.
@@ -29,22 +31,36 @@ A new repository shows up by itself. A repository with a GitHub Release that has
 gets a download section. An entry in `APPS` in `render.js` gives it an icon, a sentence, install
 notes and its pictures; its colour goes into `style.css` (`.app[data-app="…"]`).
 
-## The design, and what it deliberately leaves out
+## The design
 
-A download page: the apps first, each with its download buttons and a row of named pictures; then
-the repositories as a plain list. Stone and charcoal, one typeface (Instrument Sans), light or
-dark with the system. The colour on the page is each app's own, taken from its icon: the download
-button and the line under the picture that is showing. The pictures are real, flat screenshots,
-in the light or dark look of the visitor's system.
+A download page with some air in it.
 
-The only thing that moves by itself is the picture of an app: it changes every six seconds, with a
-line under its name filling up, goes round once and rests on the first one. It waits while the
-pointer is over it or it is off screen, and it stops as soon as someone picks a picture or presses
-the pause button. With "reduce motion" it does not start.
+1. **The first screen** is only a sentence and a shelf with the apps: icon, name, what it is for.
+2. **One section per app**: name, a sentence, the download buttons, how to install. Under it a
+   list of what the app does next to the picture for the line that is chosen.
+3. **The repositories** as a plain list.
 
-Not here, on purpose: gradients and glows, animated backgrounds, anything that follows the
-pointer, scroll effects, entrance animations, tickers, a hero with a changing word, tilted
-screenshots.
+Paper and ink, light or dark with the system. Each app brings one colour, taken from its icon:
+the block its pictures stand on and its download button. The page itself has one small yellow dot
+(the stop in the logo). Names and headlines are set in Parkinsans, text in Instrument Sans. The
+pictures are real, flat screenshots in the light or dark look of the visitor's system.
+
+**Motion** is there to be enjoyed, in three places and nowhere else:
+
+- the opening: the headline comes up line by line and the apps land on the shelf, once;
+- an app's pictures arriving the first time they are scrolled to: the list comes in line by line,
+  the coloured block rises into place and the window opens on it;
+- the picture changing with the list: the old one leaves and the new one comes in the direction
+  the list runs, and the sentence under the chosen line opens. It does this by itself once
+  round, six seconds a picture, then rests. Pointing waits, choosing or the pause button stops.
+
+Besides that, things answer a hover: an icon on the shelf lifts and tilts, a button's icon hops,
+the logo draws its lines again.
+
+**Not here, on purpose:** gradients and glows, animated backgrounds, anything that follows the
+pointer, anything tied to the scroll position, tickers, a headline with a changing word, tilted
+screenshots, narrow (condensed) headline type. With "reduce motion" the page stands still, and
+without scripts it is complete: nothing starts hidden unless `boot.js` and `app.js` are running.
 
 ## Pictures
 
@@ -52,7 +68,8 @@ A slide of an app is one picture or two side by side (`shots` in `APPS`); every 
 `<name>-light.webp` and `<name>-dark.webp`.
 
 - Roomy: made with Roomy's own `scripts/shots.mjs` (sample data), once in light and once with
-  `--dark`, resized to 2000 px (`sips -Z 2000`).
+  `--dark`, resized to 2000 px (`sips -Z 2000`) and trimmed (`--trim`), which also centres the
+  window in its picture.
 - Tailbolt: made with its snapshot tool at three times the size and without the backdrop:
   `TAILBOLT_DEMO=1 TAILBOLT_SNAPSHOT_SCALE=3 TAILBOLT_SNAPSHOT_BACKDROP=clear Tailbolt --snapshot <dir> <files…>`
 - `scripts/webp.cjs` converts them (`--trim` for panels without a backdrop, `--pad-height` so two

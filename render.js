@@ -6,7 +6,7 @@
 
 // Cloudflare keeps pictures for hours under their address. Raise this number
 // whenever a file in assets/ is replaced, so visitors get the new one.
-const ASSETS = "5";
+const ASSETS = "6";
 const asset = (path) => `${path}?v=${ASSETS}`;
 
 // How the known apps are presented. A repository that is not listed here
@@ -17,10 +17,13 @@ const asset = (path) => `${path}?v=${ASSETS}`;
 //   follows the system). kind "window" means the picture brings its own
 //   margin and shadow; without it the page adds a shadow.
 // stage: "tall" gives upright pictures more room on phones.
+// short, platforms: the two lines under the icon on the shelf at the top.
 const APPS = {
   roomy: {
     name: "Roomy",
     tagline: "See what is on your disk. Delete what you don’t need.",
+    short: "Free up space on your disk",
+    platforms: "macOS and Windows",
     icon: "assets/roomy.png",
     requires: "macOS 12 or later, Windows 10 and 11",
     license: "MIT licence",
@@ -32,27 +35,27 @@ const APPS = {
       {
         label: "Overview",
         caption: "How much is free, what uses the rest, and where cleaning up pays off.",
-        shots: [{ src: "assets/roomy/overview", w: 2000, h: 1391, kind: "window" }],
+        shots: [{ src: "assets/roomy/overview", w: 1890, h: 1289, kind: "window" }],
       },
       {
         label: "Apps",
         caption: "Every app with its size and when you last opened it. Tick what can go.",
-        shots: [{ src: "assets/roomy/apps", w: 2000, h: 1391, kind: "window" }],
+        shots: [{ src: "assets/roomy/apps", w: 1890, h: 1289, kind: "window" }],
       },
       {
         label: "Large files",
         caption: "The biggest files on the disk, filtered by type.",
-        shots: [{ src: "assets/roomy/files", w: 2000, h: 1391, kind: "window" }],
+        shots: [{ src: "assets/roomy/files", w: 1890, h: 1289, kind: "window" }],
       },
       {
         label: "Cleanup",
         caption: "Caches, logs and old installers you can remove without missing them.",
-        shots: [{ src: "assets/roomy/cleanup", w: 2000, h: 1391, kind: "window" }],
+        shots: [{ src: "assets/roomy/cleanup", w: 1890, h: 1289, kind: "window" }],
       },
       {
         label: "Bloat Scanner",
         caption: "Finds unwanted software, shows what starts by itself, checks your protections.",
-        shots: [{ src: "assets/roomy/bloat", w: 2000, h: 1391, kind: "window" }],
+        shots: [{ src: "assets/roomy/bloat", w: 1890, h: 1289, kind: "window" }],
       },
     ],
     install: [
@@ -71,6 +74,8 @@ const APPS = {
   tailbolt: {
     name: "Tailbolt",
     tagline: "AirDrop for your whole tailnet. Any size, any device.",
+    short: "Send files across your tailnet",
+    platforms: "macOS",
     icon: "assets/tailbolt.png",
     requires: "macOS 14 or later, needs Tailscale",
     license: "MIT licence",
@@ -137,7 +142,10 @@ const esc = (s) =>
 const safeUrl = (u) => (/^https:\/\//i.test(String(u ?? "")) ? String(u) : "#");
 
 /** Text typed on GitHub, with the apostrophes a typesetter would use. */
-const tidy = (s) => String(s ?? "").replace(/(\w)'(\w)/g, "$1’$2");
+const tidy = (s) =>
+  String(s ?? "")
+    .replace(/(\w)'(\w)/g, "$1’$2")
+    .replace(/\s+—\s+(\w)/g, (_, c) => `: ${c}`);
 
 /** "4.8 MB", with a space that does not break the line. */
 function size(bytes) {
@@ -157,7 +165,7 @@ function ago(iso) {
   return rtf.format(-Math.floor(days / 365), "year");
 }
 
-const date = (iso) => new Date(iso).toLocaleDateString("en", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
+const date = (iso) => new Date(iso).toLocaleDateString("en", { year: "numeric", month: "short", day: "numeric", timeZone: "UTC" });
 
 /** The download buttons of one app, the visitor's system first. */
 function downloadsFor(repo, cfg, os) {
@@ -190,13 +198,16 @@ function picture(shot, alt, now) {
   return `<a class="zoom ${shot.kind === "window" ? "window" : "panel"}" href="${light}" target="_blank" rel="noopener" title="Open at full size"><picture><source media="(prefers-color-scheme: dark)" ${at}srcset="${dark}"><img ${at}src="${light}" width="${shot.w}" height="${shot.h}" alt="${esc(alt)}" decoding="async"></picture></a>`;
 }
 
-function gallery(cfg, id) {
-  if (!cfg?.slides?.length) return "";
+function gallery(cfg, id, foot) {
+  if (!cfg?.slides?.length) return foot;
   const many = cfg.slides.length > 1;
-  const tabs = cfg.slides
+  // The list of what there is to see: a name per picture, and under the one
+  // that is showing, a sentence about it. (Screen readers get the sentence
+  // with the picture, so it is not repeated in the name of the tab.)
+  const features = cfg.slides
     .map(
       (slide, i) =>
-        `<button class="tab" type="button" role="tab" id="${id}-tab-${i}" aria-controls="${id}-slide-${i}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}" data-caption="${esc(slide.caption)}">${esc(slide.label)}<i></i></button>`,
+        `<button class="feature" type="button" role="tab" id="${id}-tab-${i}" aria-controls="${id}-slide-${i}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}" data-caption="${esc(slide.caption)}"><span class="feature-name">${esc(slide.label)}</span><span class="feature-text" aria-hidden="true"><span>${esc(slide.caption)}</span></span><i></i></button>`,
     )
     .join("");
   const slides = cfg.slides
@@ -209,12 +220,13 @@ function gallery(cfg, id) {
     })
     .join("");
   return `<div class="gallery${cfg.stage === "tall" ? " tall" : ""}" data-gallery>
-    <div class="gallery-bar">
-      <div class="tabs" role="tablist" aria-label="Pictures of ${esc(cfg.name)}">${tabs}</div>
+    <div class="features" role="tablist" aria-label="Pictures of ${esc(cfg.name)}">${features}</div>
+    <div class="stage-wrap">
+      <div class="stage">${slides}</div>
       ${many ? `<button class="playpause" type="button" aria-label="Change pictures automatically" hidden>${ICON.pause}${ICON.play}</button>` : ""}
     </div>
-    <div class="stage">${slides}</div>
     <p class="caption" aria-live="off">${esc(cfg.slides[0].caption)}</p>
+    ${foot}
   </div>`;
 }
 
@@ -252,6 +264,13 @@ function appSection(repo, os) {
   const version = repo.release ? esc(repo.release.tag.replace(/^v/, "")) : "";
   const url = esc(safeUrl(repo.html_url));
 
+  const foot = `<p class="app-foot">
+      ${repo.release ? `<span>Released ${esc(date(repo.release.published_at))}</span>` : ""}
+      ${cfg?.license ? `<span>${esc(cfg.license)}</span>` : ""}
+      <a href="${url}" rel="noopener">Source on GitHub</a>
+      ${repo.release ? `<a href="${url}/releases" rel="noopener">All versions</a>` : ""}
+    </p>`;
+
   return `<article class="app" data-app="${esc(repo.name.toLowerCase())}" id="${id}">
     <header class="app-head">
       ${cfg?.icon ? `<img class="app-icon" src="${esc(asset(cfg.icon))}" width="68" height="68" alt="">` : `<span class="app-icon letter" aria-hidden="true">${esc(name[0].toUpperCase())}</span>`}
@@ -265,14 +284,21 @@ function appSection(repo, os) {
       </div>
       ${installNotes(cfg)}
     </header>
-    ${gallery(cfg, id)}
-    <p class="app-foot">
-      ${repo.release ? `<span>Released ${esc(date(repo.release.published_at))}</span>` : ""}
-      ${cfg?.license ? `<span>${esc(cfg.license)}</span>` : ""}
-      <a href="${url}" rel="noopener">Source on GitHub</a>
-      ${repo.release ? `<a href="${url}/releases" rel="noopener">All versions</a>` : ""}
-    </p>
+    ${gallery(cfg, id, foot)}
   </article>`;
+}
+
+/** An app on the shelf at the top of the page: its icon, its name, what it is for. A click goes to its section. */
+function shelfItem(repo) {
+  const cfg = APPS[repo.name];
+  const name = cfg?.name ?? repo.name;
+  const id = `app-${repo.name.toLowerCase().replace(/[^a-z0-9-]/g, "-")}`;
+  return `<a class="shelf-item" href="#${id}" data-app="${esc(repo.name.toLowerCase())}">
+    ${cfg?.icon ? `<img class="shelf-icon" src="${esc(asset(cfg.icon))}" width="132" height="132" alt="">` : `<span class="shelf-icon letter" aria-hidden="true">${esc(name[0].toUpperCase())}</span>`}
+    <span class="shelf-name">${esc(name)}</span>
+    <span class="shelf-line">${esc(cfg?.short ?? tidy(repo.description))}</span>
+    ${cfg?.platforms ? `<span class="shelf-os">${esc(cfg.platforms)}</span>` : ""}
+  </a>`;
 }
 
 function repoRow(repo) {
@@ -292,15 +318,17 @@ function fingerprint(text) {
   return h.toString(36);
 }
 
-/** The two lists of the page as HTML: the apps (known ones first), and every repository. */
+/** The lists of the page as HTML: the shelf, the apps (known ones first), and every repository. */
 function renderLists(data, os) {
   const repos = (data.repos ?? []).filter((r) => !r.fork && !r.archived);
   const known = Object.keys(APPS)
     .map((name) => repos.find((r) => r.name === name))
     .filter(Boolean);
   const others = repos.filter((r) => !APPS[r.name] && (r.release?.assets ?? []).length > 0);
+  const apps = [...known, ...others];
   return {
-    apps: [...known, ...others].map((r) => appSection(r, os)).join(""),
+    shelf: apps.map(shelfItem).join(""),
+    apps: apps.map((r) => appSection(r, os)).join(""),
     repos: [...repos].sort((a, b) => b.pushed_at.localeCompare(a.pushed_at)).map(repoRow).join(""),
   };
 }

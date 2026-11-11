@@ -2,8 +2,8 @@
 //
 //   node scripts/build-site.mjs _site [version]
 //
-// Copies the page and its files into the folder and writes the two lists
-// (apps, repositories) from data.json straight into index.html, using the
+// Copies the page and its files into the folder and writes the lists
+// (shelf, apps, repositories) from data.json straight into index.html, using the
 // same render.js the browser uses. The page is then complete before a script
 // has run. `version` (the commit, on GitHub) is put into the addresses of the
 // stylesheet and scripts, so nobody gets an old copy from a cache.
@@ -37,6 +37,7 @@ const fill = (html, id, marker, content) => {
 };
 
 let page = read("index.html");
+page = fill(page, "shelf", "shelf", lists.shelf);
 page = fill(page, "app-list", "apps", lists.apps);
 page = fill(page, "repo-list", "repositories", lists.repos);
 page = page.replaceAll("__V__", version);
@@ -45,7 +46,7 @@ page = page.replaceAll("__V__", version);
 // empties whatever it is pointed at is one typo away from a bad day.
 fs.mkdirSync(out, { recursive: true });
 fs.writeFileSync(path.join(out, "index.html"), page);
-for (const name of ["style.css", "render.js", "app.js", "data.json"]) fs.copyFileSync(path.join(root, name), path.join(out, name));
+for (const name of ["style.css", "boot.js", "render.js", "app.js", "data.json"]) fs.copyFileSync(path.join(root, name), path.join(out, name));
 fs.cpSync(path.join(root, "assets"), path.join(out, "assets"), { recursive: true });
 
 console.log(`${out}: ${data.repos.length} repositories, index.html ${Math.round(page.length / 1024)} KB`);
