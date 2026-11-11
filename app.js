@@ -302,9 +302,26 @@ const CACHE_MINUTES = 15;
 
 async function main() {
   let shown = null;
+
+  // The snapshot the site was published with. It is asked for every time (a
+  // small file from this site), because it is what says how old "old" is.
+  let baked = null;
+  try {
+    baked = await (await fetch("data.json", { cache: "no-cache" })).json();
+  } catch {
+    /* first deploy: no snapshot yet */
+  }
+
+  // What this browser fetched from GitHub a few minutes ago saves asking
+  // again, but only while it is newer than the snapshot. A copy from before
+  // the site was last published would put an old version back on the page
+  // right after a release.
   try {
     const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
-    if (cached && Array.isArray(cached.repos) && Date.now() - new Date(cached.generated).getTime() < CACHE_MINUTES * 6e4) {
+    const taken = cached && Array.isArray(cached.repos) ? new Date(cached.generated).getTime() : NaN;
+    const young = Date.now() - taken < CACHE_MINUTES * 6e4;
+    const current = !baked || taken >= new Date(baked.generated).getTime();
+    if (young && current) {
       render((shown = cached));
       return;
     }
@@ -312,12 +329,7 @@ async function main() {
     /* no storage */
   }
 
-  try {
-    const baked = await (await fetch("data.json", { cache: "no-cache" })).json();
-    render((shown = baked));
-  } catch {
-    /* first deploy: no snapshot yet */
-  }
+  if (baked) render((shown = baked));
 
   try {
     const fresh = await live();
