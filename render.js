@@ -6,7 +6,7 @@
 
 // Cloudflare keeps pictures for hours under their address. Raise this number
 // whenever a file in assets/ is replaced, so visitors get the new one.
-const ASSETS = "7";
+const ASSETS = "8";
 const asset = (path) => `${path}?v=${ASSETS}`;
 
 // How the known apps are presented. A repository that is not listed here
@@ -34,8 +34,18 @@ const APPS = {
     slides: [
       {
         label: "Health",
-        caption: "Storage, memory, processor and battery at a glance, and a check-up that says what to look at.",
+        caption: "How healthy your computer is, as one number out of 100, with every missing point named.",
         shots: [{ src: "assets/roomy/health", w: 1890, h: 1289, kind: "window" }],
+      },
+      {
+        label: "Protection",
+        caption: "One scan for malware and unwanted software, with the signatures your system already trusts.",
+        shots: [{ src: "assets/roomy/protection", w: 1890, h: 1289, kind: "window" }],
+      },
+      {
+        label: "Fix",
+        caption: "One button fixes what the scan found. Every line says what will happen to it.",
+        shots: [{ src: "assets/roomy/fix", w: 1890, h: 1289, kind: "window" }],
       },
       {
         label: "Storage",
@@ -48,14 +58,9 @@ const APPS = {
         shots: [{ src: "assets/roomy/cleanup", w: 1890, h: 1289, kind: "window" }],
       },
       {
-        label: "Apps",
-        caption: "Every app with its size and when you last opened it. Tick what can go.",
+        label: "Delete",
+        caption: "Tick what can go and carry on. Deleting runs in the background while a ring in the corner counts.",
         shots: [{ src: "assets/roomy/apps", w: 1890, h: 1289, kind: "window" }],
-      },
-      {
-        label: "Protection",
-        caption: "A malware scan with the signatures your system already trusts, and your security settings.",
-        shots: [{ src: "assets/roomy/protection", w: 1890, h: 1289, kind: "window" }],
       },
       {
         label: "Bloat Scanner",
