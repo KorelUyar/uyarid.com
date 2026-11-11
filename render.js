@@ -6,7 +6,7 @@
 
 // Cloudflare keeps pictures for hours under their address. Raise this number
 // whenever a file in assets/ is replaced, so visitors get the new one.
-const ASSETS = "6";
+const ASSETS = "7";
 const asset = (path) => `${path}?v=${ASSETS}`;
 
 // How the known apps are presented. A repository that is not listed here
@@ -21,8 +21,8 @@ const asset = (path) => `${path}?v=${ASSETS}`;
 const APPS = {
   roomy: {
     name: "Roomy",
-    tagline: "See what is on your disk. Delete what you don’t need.",
-    short: "Free up space on your disk",
+    tagline: "See how your computer is doing, what fills its disk, and what should not be on it.",
+    short: "Check up and clean up your computer",
     platforms: "macOS and Windows",
     icon: "assets/roomy.png",
     requires: "macOS 12 or later, Windows 10 and 11",
@@ -33,19 +33,14 @@ const APPS = {
     ],
     slides: [
       {
-        label: "Overview",
+        label: "Health",
+        caption: "Storage, memory, processor and battery at a glance, and a check-up that says what to look at.",
+        shots: [{ src: "assets/roomy/health", w: 1890, h: 1289, kind: "window" }],
+      },
+      {
+        label: "Storage",
         caption: "How much is free, what uses the rest, and where cleaning up pays off.",
-        shots: [{ src: "assets/roomy/overview", w: 1890, h: 1289, kind: "window" }],
-      },
-      {
-        label: "Apps",
-        caption: "Every app with its size and when you last opened it. Tick what can go.",
-        shots: [{ src: "assets/roomy/apps", w: 1890, h: 1289, kind: "window" }],
-      },
-      {
-        label: "Large files",
-        caption: "The biggest files on the disk, filtered by type.",
-        shots: [{ src: "assets/roomy/files", w: 1890, h: 1289, kind: "window" }],
+        shots: [{ src: "assets/roomy/storage", w: 1890, h: 1289, kind: "window" }],
       },
       {
         label: "Cleanup",
@@ -53,8 +48,18 @@ const APPS = {
         shots: [{ src: "assets/roomy/cleanup", w: 1890, h: 1289, kind: "window" }],
       },
       {
+        label: "Apps",
+        caption: "Every app with its size and when you last opened it. Tick what can go.",
+        shots: [{ src: "assets/roomy/apps", w: 1890, h: 1289, kind: "window" }],
+      },
+      {
+        label: "Protection",
+        caption: "A malware scan with the signatures your system already trusts, and your security settings.",
+        shots: [{ src: "assets/roomy/protection", w: 1890, h: 1289, kind: "window" }],
+      },
+      {
         label: "Bloat Scanner",
-        caption: "Finds unwanted software, shows what starts by itself, checks your protections.",
+        caption: "Finds software nobody asked for and shows everything that starts by itself.",
         shots: [{ src: "assets/roomy/bloat", w: 1890, h: 1289, kind: "window" }],
       },
     ],
