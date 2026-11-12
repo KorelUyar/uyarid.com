@@ -17,6 +17,8 @@ const asset = (path) => `${path}?v=${ASSETS}`;
 //   follows the system). kind "window" means the picture brings its own
 //   margin and shadow; without it the page adds a shadow.
 // stage: "tall" gives upright pictures more room on phones.
+// languages: what the app is written in, where the one name GitHub gives (the
+//   language with the most bytes) tells only half of it.
 // short, platforms: the two lines under the icon on the shelf at the top.
 const APPS = {
   roomy: {
@@ -27,6 +29,7 @@ const APPS = {
     icon: "assets/roomy.png",
     requires: "macOS 12 or later, Windows 10 and 11",
     license: "MIT licence",
+    languages: ["Rust", "TypeScript"],
     downloads: [
       { os: "mac", label: "macOS", match: /\.dmg$/i },
       { os: "win", label: "Windows", match: /setup\.exe$/i },
@@ -313,10 +316,11 @@ function shelfItem(repo) {
 
 function repoRow(repo) {
   const stars = Number(repo.stars) || 0;
+  const languages = APPS[repo.name]?.languages ?? (repo.language ? [repo.language] : []);
   return `<a class="repo" href="${esc(safeUrl(repo.html_url))}" rel="noopener">
     <span class="repo-name">${esc(repo.name)}${repo.release ? `<small>${esc(repo.release.tag)}</small>` : ""}</span>
     <span class="repo-desc">${esc(tidy(repo.description))}</span>
-    <span class="repo-lang">${repo.language ? `<i data-lang="${esc(repo.language)}"></i>${esc(repo.language)}` : ""}</span>
+    <span class="repo-lang">${languages.map((name) => `<span><i data-lang="${esc(name)}"></i>${esc(name)}</span>`).join("")}</span>
     <span class="repo-when">${stars ? `${stars} ${stars === 1 ? "star" : "stars"}, ` : ""}${esc(ago(repo.pushed_at))}</span>
   </a>`;
 }

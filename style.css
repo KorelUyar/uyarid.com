@@ -929,9 +929,18 @@ h1 {
   white-space: nowrap;
 }
 
-.repo-lang {
+/* one or two languages, each with its dot */
+.repo-lang,
+.repo-lang span {
   display: inline-flex;
   align-items: center;
+}
+
+.repo-lang {
+  gap: 14px;
+}
+
+.repo-lang span {
   gap: 7px;
 }
 
