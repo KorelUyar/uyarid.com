@@ -6,7 +6,7 @@
 
 // Cloudflare keeps pictures for hours under their address. Raise this number
 // whenever a file in assets/ is replaced, so visitors get the new one.
-const ASSETS = "8";
+const ASSETS = "9";
 const asset = (path) => `${path}?v=${ASSETS}`;
 
 // How the known apps are presented. A repository that is not listed here
@@ -135,6 +135,50 @@ const APPS = {
         text: "One line in Terminal downloads the latest version, puts it in Applications and starts it.",
         command: "curl -fsSL https://raw.githubusercontent.com/KorelUyar/tailbolt/main/scripts/install.sh | zsh",
         after: "By hand: unzip the download and move Tailbolt to Applications. If macOS refuses to open it, allow it under System Settings, Privacy & Security, Open Anyway.",
+      },
+    ],
+  },
+  stapel: {
+    name: "Stapel",
+    tagline: "Your Edubase school books in their own window, and as a PDF when you need them offline.",
+    short: "Your Edubase books in their own window",
+    platforms: "macOS",
+    icon: "assets/stapel.png",
+    requires: "macOS 12 or later, an Edubase account",
+    license: "GPL-3.0 licence",
+    downloads: [{ os: "mac", label: "macOS", match: /\.zip$/i }],
+    slides: [
+      {
+        label: "Library",
+        caption: "Every book on your Edubase account, with its cover. One click opens it. (Pictured with sample covers.)",
+        shots: [{ src: "assets/stapel/library", w: 1890, h: 1290, kind: "window" }],
+      },
+      {
+        label: "Read",
+        caption: "Books open in Edubase’s own reader, inside the app. Notes and bookmarks work as on the website.",
+        shots: [{ src: "assets/stapel/reader", w: 1890, h: 1290, kind: "window" }],
+      },
+      {
+        label: "PDF",
+        caption: "Save a book you have a licence for as one PDF, to read offline or to write in.",
+        shots: [{ src: "assets/stapel/pdf", w: 1890, h: 1290, kind: "window" }],
+      },
+      {
+        label: "Sign in",
+        caption: "Sign in once on Edubase’s own page, also with Office 365 or Edulog. The app never sees your password.",
+        shots: [{ src: "assets/stapel/welcome", w: 1890, h: 1290, kind: "window" }],
+      },
+    ],
+    install: [
+      {
+        title: "Installing",
+        text: "Stapel is not notarised by Apple, so macOS asks before the first start. The easiest way is one line in Terminal. It downloads the latest version and puts it in Applications.",
+        command: "curl -fsSL https://github.com/KorelUyar/stapel/releases/latest/download/install.sh | zsh",
+        after: "By hand: unzip the download and move Stapel to Applications. If macOS refuses to open it, allow it under System Settings, Privacy & Security, Open Anyway.",
+      },
+      {
+        title: "Good to know",
+        text: "Stapel is not made by Edubase. It shows Edubase’s own reader with your account. Save as PDF only books you have a licence for, and keep the PDFs to yourself.",
       },
     ],
   },

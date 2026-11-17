@@ -307,6 +307,12 @@ h1 {
   --stage: #3a2596;
 }
 
+.app[data-app="stapel"] {
+  --app: #1f6e59;
+  --app-ink: #fff;
+  --stage: #155749;
+}
+
 .app-head {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
