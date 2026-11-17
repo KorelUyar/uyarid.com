@@ -142,11 +142,14 @@ const APPS = {
     name: "Stapel",
     tagline: "Your Edubase school books in their own window, and as a PDF when you need them offline.",
     short: "Your Edubase books in their own window",
-    platforms: "macOS",
+    platforms: "macOS and Windows",
     icon: "assets/stapel.png",
-    requires: "macOS 12 or later, an Edubase account",
+    requires: "macOS 12 or later, Windows 10 and 11, an Edubase account",
     license: "GPL-3.0 licence",
-    downloads: [{ os: "mac", label: "macOS", match: /\.zip$/i }],
+    downloads: [
+      { os: "mac", label: "macOS", match: /\.zip$/i },
+      { os: "win", label: "Windows", match: /setup\.exe$/i },
+    ],
     slides: [
       {
         label: "Library",
@@ -171,10 +174,14 @@ const APPS = {
     ],
     install: [
       {
-        title: "Installing",
+        title: "On a Mac",
         text: "Stapel is not notarised by Apple, so macOS asks before the first start. The easiest way is one line in Terminal. It downloads the latest version and puts it in Applications.",
         command: "curl -fsSL https://github.com/KorelUyar/stapel/releases/latest/download/install.sh | zsh",
         after: "By hand: unzip the download and move Stapel to Applications. If macOS refuses to open it, allow it under System Settings, Privacy & Security, Open Anyway.",
+      },
+      {
+        title: "On Windows",
+        text: "Windows shows “Windows protected your PC” because the installer is not signed. Choose More info, then Run anyway. Stapel installs for your user only and needs no administrator.",
       },
       {
         title: "Good to know",
