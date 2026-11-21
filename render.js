@@ -194,6 +194,10 @@ const APPS = {
         text: "Windows shows “Windows protected your PC” because the installer is not signed. Choose More info, then Run anyway. Stapel installs for your user only and needs no administrator.",
       },
       {
+        title: "Updates",
+        text: "From version 1.2 on, Stapel tells you when there is a newer version and installs it with one click. Coming from 1.1, install it once more by hand.",
+      },
+      {
         title: "Good to know",
         text: "Stapel is not made by Edubase. The pages of a book are drawn by Edubase’s own reader with your account. Save as PDF only books you have a licence for, and keep the PDFs to yourself.",
       },
