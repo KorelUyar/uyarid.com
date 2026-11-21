@@ -6,7 +6,7 @@
 
 // Cloudflare keeps pictures for hours under their address. Raise this number
 // whenever a file in assets/ is replaced, so visitors get the new one.
-const ASSETS = "11";
+const ASSETS = "12";
 const asset = (path) => `${path}?v=${ASSETS}`;
 
 // How the known apps are presented. A repository that is not listed here
@@ -205,8 +205,8 @@ const APPS = {
   },
   spurt: {
     name: "Spurt",
-    tagline: "A study app. Give it your book and your learning objectives, and it says what to learn for the grade you want in the time you have.",
-    short: "What to learn for your exam, and in what order",
+    tagline: "A study app. Give it your book and your learning objectives, and it gives you one list: what to read and which exercises to solve, with the book open beside it.",
+    short: "One list to work through for your exam, with your book beside it",
     platforms: "macOS",
     icon: "assets/spurt.png",
     requires: "macOS 13 or later, and an AI of your own: Claude Code, an API key, or a model on your computer",
@@ -214,24 +214,24 @@ const APPS = {
     downloads: [{ os: "mac", label: "macOS", match: /\.zip$/i }],
     slides: [
       {
-        label: "Today",
-        caption: "One next thing to do, with the page and the exercise numbers in your book. (Pictured with sample exams.)",
-        shots: [{ src: "assets/spurt/today", w: 2240, h: 1600, kind: "window" }],
+        label: "Plan",
+        caption: "One screen per exam: how much is done, then what to read and which exercises to solve, with page and number. A step opens the book at its page.",
+        shots: [{ src: "assets/spurt/exam", w: 2720, h: 1720, kind: "window" }],
       },
       {
-        label: "Strategy",
-        caption: "The topics of the exam, ranked by points per minute. If the time is too short, it says what is left out.",
-        shots: [{ src: "assets/spurt/strategy", w: 2240, h: 1600, kind: "window" }],
+        label: "Formulas",
+        caption: "The formulas the exam needs, large, by topic, each with a link to the page it comes from.",
+        shots: [{ src: "assets/spurt/formulas", w: 2720, h: 1720, kind: "window" }],
       },
       {
-        label: "Quiz",
-        caption: "Quizzes and mock exams from your own material, corrected with a short reason and the page in the book.",
-        shots: [{ src: "assets/spurt/quiz", w: 2240, h: 1600, kind: "window" }],
+        label: "Helper",
+        caption: "Ask where something is in your book. The answer names the pages, and they open beside it.",
+        shots: [{ src: "assets/spurt/helper", w: 2720, h: 1720, kind: "window" }],
       },
       {
-        label: "Material",
-        caption: "Drop in the book as a PDF and paste the learning objectives. A book saved with Stapel works too.",
-        shots: [{ src: "assets/spurt/material", w: 2240, h: 1600, kind: "window" }],
+        label: "Final exam",
+        caption: "At the end, an exam on everything. You type only the results; it shows a grade estimate and puts weak topics back on your list.",
+        shots: [{ src: "assets/spurt/result", w: 2720, h: 1720, kind: "window" }],
       },
     ],
     install: [
