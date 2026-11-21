@@ -313,6 +313,12 @@ h1 {
   --stage: #155749;
 }
 
+.app[data-app="spurt"] {
+  --app: #c8400c;
+  --app-ink: #fff;
+  --stage: #b8390b;
+}
+
 .app-head {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;

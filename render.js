@@ -6,7 +6,7 @@
 
 // Cloudflare keeps pictures for hours under their address. Raise this number
 // whenever a file in assets/ is replaced, so visitors get the new one.
-const ASSETS = "9";
+const ASSETS = "10";
 const asset = (path) => `${path}?v=${ASSETS}`;
 
 // How the known apps are presented. A repository that is not listed here
@@ -186,6 +186,50 @@ const APPS = {
       {
         title: "Good to know",
         text: "Stapel is not made by Edubase. It shows Edubase’s own reader with your account. Save as PDF only books you have a licence for, and keep the PDFs to yourself.",
+      },
+    ],
+  },
+  spurt: {
+    name: "Spurt",
+    tagline: "A study app. Give it your book and your learning objectives, and it says what to learn for the grade you want in the time you have.",
+    short: "What to learn for your exam, and in what order",
+    platforms: "macOS",
+    icon: "assets/spurt.png",
+    requires: "macOS 13 or later, and an AI of your own: Claude Code, an API key, or a model on your computer",
+    license: "MIT licence",
+    downloads: [{ os: "mac", label: "macOS", match: /\.zip$/i }],
+    slides: [
+      {
+        label: "Today",
+        caption: "One next thing to do, with the page and the exercise numbers in your book. (Pictured with sample exams.)",
+        shots: [{ src: "assets/spurt/today", w: 2240, h: 1600, kind: "window" }],
+      },
+      {
+        label: "Strategy",
+        caption: "The topics of the exam, ranked by points per minute. If the time is too short, it says what is left out.",
+        shots: [{ src: "assets/spurt/strategy", w: 2240, h: 1600, kind: "window" }],
+      },
+      {
+        label: "Quiz",
+        caption: "Quizzes and mock exams from your own material, corrected with a short reason and the page in the book.",
+        shots: [{ src: "assets/spurt/quiz", w: 2240, h: 1600, kind: "window" }],
+      },
+      {
+        label: "Material",
+        caption: "Drop in the book as a PDF and paste the learning objectives. A book saved with Stapel works too.",
+        shots: [{ src: "assets/spurt/material", w: 2240, h: 1600, kind: "window" }],
+      },
+    ],
+    install: [
+      {
+        title: "Installing",
+        text: "Spurt is not notarised by Apple, so macOS asks before the first start. The easiest way is one line in Terminal. It downloads the latest version and puts it in Applications.",
+        command: "curl --proto '=https' --tlsv1.2 -fsSL https://github.com/KorelUyar/spurt/releases/latest/download/install.sh | zsh",
+        after: "By hand: unzip the download and move Spurt to Applications. If macOS refuses to open it, allow it under System Settings, Privacy & Security, Open Anyway.",
+      },
+      {
+        title: "Good to know",
+        text: "Spurt has no account and no server of its own. The AI is one you bring: Claude Code on your Mac, an Anthropic or OpenRouter key, or a model on your own computer. Your files stay on your Mac; only the pages a step needs go to the AI you chose.",
       },
     ],
   },
