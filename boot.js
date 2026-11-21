@@ -5,3 +5,9 @@ document.documentElement.classList.add("js");
 setTimeout(() => {
   if (!window.uyaridReady) document.documentElement.classList.remove("js");
 }, 3000);
+// Aced was called Spurt: a link to the old place on the page leads to the new one.
+if (location.hash === "#spurt") {
+  addEventListener("DOMContentLoaded", () => {
+    if (!document.getElementById("spurt") && document.getElementById("aced")) location.replace("#aced");
+  });
+}

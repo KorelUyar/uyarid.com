@@ -6,7 +6,7 @@
 
 // Cloudflare keeps pictures for hours under their address. Raise this number
 // whenever a file in assets/ is replaced, so visitors get the new one.
-const ASSETS = "12";
+const ASSETS = "13";
 const asset = (path) => `${path}?v=${ASSETS}`;
 
 // How the known apps are presented. A repository that is not listed here
@@ -203,12 +203,12 @@ const APPS = {
       },
     ],
   },
-  spurt: {
-    name: "Spurt",
-    tagline: "A study app. Give it your book and your learning objectives, and it gives you one list: what to read and which exercises to solve, with the book open beside it.",
-    short: "One list to work through for your exam, with your book beside it",
+  aced: {
+    name: "Aced",
+    tagline: "Aced: know exactly what to do before your exam. Give it your book and your learning objectives, and it gives you one list: what to read and which exercises to solve, with the book open beside it.",
+    short: "Know exactly what to do before your exam",
     platforms: "macOS",
-    icon: "assets/spurt.png",
+    icon: "assets/aced.png",
     requires: "macOS 13 or later, and an AI of your own: Claude Code, an API key, or a model on your computer",
     license: "MIT licence",
     downloads: [{ os: "mac", label: "macOS", match: /\.zip$/i }],
@@ -216,38 +216,45 @@ const APPS = {
       {
         label: "Plan",
         caption: "One screen per exam: how much is done, then what to read and which exercises to solve, with page and number. A step opens the book at its page.",
-        shots: [{ src: "assets/spurt/exam", w: 2720, h: 1720, kind: "window" }],
+        shots: [{ src: "assets/aced/exam", w: 2720, h: 1720, kind: "window" }],
       },
       {
         label: "Formulas",
         caption: "The formulas the exam needs, large, by topic, each with a link to the page it comes from.",
-        shots: [{ src: "assets/spurt/formulas", w: 2720, h: 1720, kind: "window" }],
+        shots: [{ src: "assets/aced/formulas", w: 2720, h: 1720, kind: "window" }],
       },
       {
         label: "Helper",
         caption: "Ask where something is in your book. The answer names the pages, and they open beside it.",
-        shots: [{ src: "assets/spurt/helper", w: 2720, h: 1720, kind: "window" }],
+        shots: [{ src: "assets/aced/helper", w: 2720, h: 1720, kind: "window" }],
       },
       {
         label: "Final exam",
         caption: "At the end, an exam on everything. You type only the results; it shows a grade estimate and puts weak topics back on your list.",
-        shots: [{ src: "assets/spurt/result", w: 2720, h: 1720, kind: "window" }],
+        shots: [{ src: "assets/aced/result", w: 2720, h: 1720, kind: "window" }],
       },
     ],
     install: [
       {
         title: "Installing",
-        text: "Spurt is not notarised by Apple, so macOS asks before the first start. The easiest way is one line in Terminal. It downloads the latest version and puts it in Applications.",
-        command: "curl --proto '=https' --tlsv1.2 -fsSL https://github.com/KorelUyar/spurt/releases/latest/download/install.sh | zsh",
-        after: "By hand: unzip the download and move Spurt to Applications. If macOS refuses to open it, allow it under System Settings, Privacy & Security, Open Anyway.",
+        text: "Aced is not notarised by Apple, so macOS asks before the first start. The easiest way is one line in Terminal. It downloads the latest version and puts it in Applications.",
+        command: "curl --proto '=https' --tlsv1.2 -fsSL https://github.com/KorelUyar/aced/releases/latest/download/install.sh | zsh",
+        after: "By hand: unzip the download and move Aced to Applications. If macOS refuses to open it, allow it under System Settings, Privacy & Security, Open Anyway.",
+      },
+      {
+        title: "Coming from Spurt",
+        text: "Aced was called Spurt up to version 0.2. Installing Aced replaces Spurt, and your exams, ticks and books move over when Aced first starts. A saved API key has to be entered once more.",
       },
       {
         title: "Good to know",
-        text: "Spurt has no account and no server of its own. The AI is one you bring: Claude Code on your Mac, an Anthropic or OpenRouter key, or a model on your own computer. Your files stay on your Mac; only the pages a step needs go to the AI you chose.",
+        text: "Aced has no account and no server of its own. The AI is one you bring: Claude Code on your Mac, an Anthropic or OpenRouter key, or a model on your own computer. Your files stay on your Mac; only the pages a step needs go to the AI you chose.",
       },
     ],
   },
 };
+
+// The repository of Aced was called "spurt": until its rename has reached this page's data, the entry answers to the old name too.
+APPS.spurt = APPS.aced;
 
 const ICON = {
   mac: '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M16.37 12.6c-.02-2.2 1.8-3.26 1.88-3.31-1.02-1.5-2.62-1.7-3.19-1.73-1.36-.14-2.65.8-3.34.8-.69 0-1.75-.78-2.88-.76-1.48.02-2.85.86-3.61 2.19-1.54 2.67-.39 6.62 1.11 8.79.73 1.06 1.6 2.25 2.75 2.21 1.1-.04 1.52-.71 2.85-.71 1.33 0 1.71.71 2.88.69 1.19-.02 1.94-1.08 2.67-2.15.84-1.23 1.19-2.42 1.21-2.48-.03-.01-2.31-.89-2.33-3.54ZM14.2 6.15c.61-.74 1.02-1.76.91-2.78-.88.04-1.94.59-2.57 1.32-.56.65-1.06 1.7-.93 2.7.98.08 1.98-.5 2.59-1.24Z"/></svg>',

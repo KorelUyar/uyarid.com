@@ -313,6 +313,7 @@ h1 {
   --stage: #155749;
 }
 
+.app[data-app="aced"],
 .app[data-app="spurt"] {
   --app: #c8400c;
   --app-ink: #fff;
