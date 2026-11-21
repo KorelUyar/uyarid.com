@@ -140,8 +140,8 @@ const APPS = {
   },
   stapel: {
     name: "Stapel",
-    tagline: "Your Edubase school books in their own window, and as a PDF when you need them offline.",
-    short: "Your Edubase books in their own window",
+    tagline: "Your Edubase school books in their own app: sorted into folders, with your notes on the pages, and as PDFs when you need them offline.",
+    short: "Your Edubase books, with folders and notes",
     platforms: "macOS and Windows",
     icon: "assets/stapel.png",
     requires: "macOS 12 or later, Windows 10 and 11, an Edubase account",
@@ -152,19 +152,29 @@ const APPS = {
     ],
     slides: [
       {
-        label: "Library",
-        caption: "Every book on your Edubase account, with its cover. One click opens it. (Pictured with sample covers.)",
+        label: "Folders",
+        caption: "Every book on your Edubase account. Make folders with your own names and colours and drag books into them. (Pictured with sample covers.)",
         shots: [{ src: "assets/stapel/library", w: 1890, h: 1290, kind: "window" }],
       },
       {
         label: "Read",
-        caption: "Books open in Edubase’s own reader, inside the app. Notes and bookmarks work as on the website.",
+        caption: "A reader of its own: table of contents, search, bookmarks, one or two pages. It remembers where you stopped.",
         shots: [{ src: "assets/stapel/reader", w: 1890, h: 1290, kind: "window" }],
       },
       {
+        label: "Notes",
+        caption: "Write on the pages with pen, highlighter and typed text. Your notes stay on your computer.",
+        shots: [{ src: "assets/stapel/notes", w: 1890, h: 1290, kind: "window" }],
+      },
+      {
+        label: "Pick",
+        caption: "Pick several books, or all of them, to move them into a folder or save them as PDF in one go.",
+        shots: [{ src: "assets/stapel/select", w: 1890, h: 1290, kind: "window" }],
+      },
+      {
         label: "PDF",
-        caption: "Save a book you have a licence for as one PDF, to read offline or to write in.",
-        shots: [{ src: "assets/stapel/pdf", w: 1890, h: 1290, kind: "window" }],
+        caption: "Save books you have a licence for as PDFs, one after the other, with your notes printed in.",
+        shots: [{ src: "assets/stapel/batch", w: 1890, h: 1290, kind: "window" }],
       },
       {
         label: "Sign in",
@@ -185,7 +195,7 @@ const APPS = {
       },
       {
         title: "Good to know",
-        text: "Stapel is not made by Edubase. It shows Edubase’s own reader with your account. Save as PDF only books you have a licence for, and keep the PDFs to yourself.",
+        text: "Stapel is not made by Edubase. The pages of a book are drawn by Edubase’s own reader with your account. Save as PDF only books you have a licence for, and keep the PDFs to yourself.",
       },
     ],
   },
