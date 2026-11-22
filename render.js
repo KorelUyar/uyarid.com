@@ -6,7 +6,7 @@
 
 // Cloudflare keeps pictures for hours under their address. Raise this number
 // whenever a file in assets/ is replaced, so visitors get the new one.
-const ASSETS = "14";
+const ASSETS = "15";
 const asset = (path) => `${path}?v=${ASSETS}`;
 
 // How the known apps are presented. A repository that is not listed here
@@ -163,8 +163,13 @@ const APPS = {
       },
       {
         label: "Notes",
-        caption: "Write on the pages with pen, highlighter and typed text. Your notes stay on your computer.",
+        caption: "Write on the pages with pen, highlighter and typed text. What you mark is listed as text, chapter by chapter, and copies as a study sheet. Keep your notes in iCloud Drive or OneDrive, and every computer has them.",
         shots: [{ src: "assets/stapel/notes", w: 1890, h: 1290, kind: "window" }],
+      },
+      {
+        label: "Chapters",
+        caption: "Save a whole book, some chapters or a few pages as a PDF you can search, with the book’s table of contents and page numbers. Only books you have a licence for.",
+        shots: [{ src: "assets/stapel/chapters", w: 1890, h: 1290, kind: "window" }],
       },
       {
         label: "Pick",
@@ -173,7 +178,7 @@ const APPS = {
       },
       {
         label: "PDF",
-        caption: "Save books you have a licence for as PDFs, one after the other, with your notes printed in.",
+        caption: "Save several books you have a licence for as PDFs in one go, sorted into your folders, with your notes printed in.",
         shots: [{ src: "assets/stapel/batch", w: 1890, h: 1290, kind: "window" }],
       },
       {
