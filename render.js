@@ -6,7 +6,7 @@
 
 // Cloudflare keeps pictures for hours under their address. Raise this number
 // whenever a file in assets/ is replaced, so visitors get the new one.
-const ASSETS = "15";
+const ASSETS = "16";
 const asset = (path) => `${path}?v=${ASSETS}`;
 
 // How the known apps are presented. A repository that is not listed here
@@ -220,7 +220,7 @@ const APPS = {
     slides: [
       {
         label: "Plan",
-        caption: "One screen per exam: how much is done, then what to read and which exercises to solve, with page and number. A step opens the book at its page.",
+        caption: "One screen per exam: how much is done, a short summary for each topic, and the exercises to solve right in the app, with the book open at their page.",
         shots: [{ src: "assets/aced/exam", w: 2720, h: 1720, kind: "window" }],
       },
       {
