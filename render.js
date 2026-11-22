@@ -6,7 +6,7 @@
 
 // Cloudflare keeps pictures for hours under their address. Raise this number
 // whenever a file in assets/ is replaced, so visitors get the new one.
-const ASSETS = "13";
+const ASSETS = "14";
 const asset = (path) => `${path}?v=${ASSETS}`;
 
 // How the known apps are presented. A repository that is not listed here
@@ -205,7 +205,7 @@ const APPS = {
   },
   aced: {
     name: "Aced",
-    tagline: "Aced: know exactly what to do before your exam. Give it your book and your learning objectives, and it gives you one list: what to read and which exercises to solve, with the book open beside it.",
+    tagline: "Aced: know exactly what to do before your exam. Give it your book and your learning objectives in any format (PDF, screenshots and photos, Word, Excel, PowerPoint, Pages and more), and it gives you one list: what to read and which exercises to solve, with the book open beside it.",
     short: "Know exactly what to do before your exam",
     platforms: "macOS",
     icon: "assets/aced.png",
@@ -247,7 +247,7 @@ const APPS = {
       },
       {
         title: "Good to know",
-        text: "Aced has no account and no server of its own. The AI is one you bring: Claude Code on your Mac, an Anthropic or OpenRouter key, or a model on your own computer. Your files stay on your Mac; only the pages a step needs go to the AI you chose.",
+        text: "Aced has no account and no server of its own. The AI is one you bring: Claude Code on your Mac, an Anthropic or OpenRouter key, or a model on your own computer. Your files stay on your Mac; only the pages a step needs go to the AI you chose. Screenshots, photos and short scans are read by that AI too: a picture of each of their pages goes to it once, so it can write down the exercises and formulas on them.",
       },
     ],
   },
