@@ -320,6 +320,12 @@ h1 {
   --stage: #b8390b;
 }
 
+.app[data-app="blanko"] {
+  --app: #2148c6;
+  --app-ink: #fff;
+  --stage: #1a3aa6;
+}
+
 .app-head {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;

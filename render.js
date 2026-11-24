@@ -6,7 +6,7 @@
 
 // Cloudflare keeps pictures for hours under their address. Raise this number
 // whenever a file in assets/ is replaced, so visitors get the new one.
-const ASSETS = "16";
+const ASSETS = "17";
 const asset = (path) => `${path}?v=${ASSETS}`;
 
 // How the known apps are presented. A repository that is not listed here
@@ -253,6 +253,54 @@ const APPS = {
       {
         title: "Good to know",
         text: "Aced has no account and no server of its own. The AI is one you bring: Claude Code on your Mac, an Anthropic or OpenRouter key, or a model on your own computer. Your files stay on your Mac; only the pages a step needs go to the AI you chose. Screenshots, photos and short scans are read by that AI too: a picture of each of their pages goes to it once, so it can write down the exercises and formulas on them. When you share an exam, your friend starts at 0%: your ticks, results, answers and settings stay with you, and books stay out unless you add them. What you write in the book stays on your Mac.",
+      },
+    ],
+  },
+  blanko: {
+    name: "Blanko",
+    tagline: "Fill in PDFs on your Mac, with an assistant that writes the answers into the PDF itself: on the lines, in the blanks, in the boxes and form fields. Not only into a chat.",
+    short: "Fill in PDFs, answers written in",
+    platforms: "macOS",
+    icon: "assets/blanko.png",
+    requires: "macOS 14 or later, and Claude Code or an Anthropic API key",
+    license: "MIT licence",
+    downloads: [{ os: "mac", label: "macOS", match: /\.zip$/i }],
+    slides: [
+      {
+        label: "Solve",
+        caption: "Say “Solve this page” and the answers land on the sheet: on the lines, in the blanks, in the table, an X in the right box. The chat says what it did, and one click undoes it.",
+        shots: [{ src: "assets/blanko/solve", w: 2640, h: 1720, kind: "window" }],
+      },
+      {
+        label: "Forms",
+        caption: "Real PDF forms fill in with a click and Tab. Or tell the assistant who the form is for, and it fills in the fields.",
+        shots: [{ src: "assets/blanko/form", w: 2640, h: 1720, kind: "window" }],
+      },
+      {
+        label: "Explain",
+        caption: "Ask about a task and get it explained in the chat, with nothing written on the page.",
+        shots: [{ src: "assets/blanko/explain", w: 2640, h: 1720, kind: "window" }],
+      },
+      {
+        label: "Library",
+        caption: "Every PDF on your Mac in one place, with folders, search and the ones you opened last. (Pictured with sample sheets.)",
+        shots: [{ src: "assets/blanko/library", w: 2640, h: 1720, kind: "window" }],
+      },
+    ],
+    install: [
+      {
+        title: "Installing",
+        text: "Blanko is not notarised by Apple, so macOS asks before the first start. The easiest way is one line in Terminal. It downloads the latest version and puts it in Applications.",
+        command: "curl --proto '=https' --tlsv1.2 -fsSL https://github.com/KorelUyar/blanko/releases/latest/download/install.sh | zsh",
+        after: "By hand: unzip the download and move Blanko to Applications. If macOS refuses to open it, allow it under System Settings, Privacy & Security, Open Anyway.",
+      },
+      {
+        title: "The assistant",
+        text: "It runs through Claude Code on your Mac, with your own Claude login and nothing to set up, or through an Anthropic API key you enter in the app. With both, one steps in when the other cannot sign in.",
+      },
+      {
+        title: "Good to know",
+        text: "Blanko has no account and no server of its own. Only the page you ask about and the text of that PDF go to Claude. The assistant gets no access to your files, so text in a PDF cannot make it read anything on your Mac. Check the answers before you hand anything in.",
       },
     ],
   },
